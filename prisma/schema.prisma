@@ -23,12 +23,14 @@ model Gift {
 }
 
 model Settings {
-  id            String  @id @default(cuid())
-  coupleNames   String  @default("Nuestros Nombres")
-  coverPhotoUrl String?
-  bankName      String  @default("Banco")
-  bankAccount   String  @default("000000")
-  bankHolder    String  @default("Titular")
-  bankDocument  String  @default("0.000.000")
-  galleryImages String? // Can store a JSON array of strings: '["url1", "url2"]'
+  id              String  @id @default(cuid())
+  coupleNames     String  @default("Nuestros Nombres")
+  coverPhotoUrl   String?
+  avatarPhotoUrl  String?
+  bankName        String  @default("Banco")
+  bankAccount     String  @default("000000")
+  bankHolder      String  @default("Titular")
+  bankDocument    String  @default("0.000.000")
+  bankAlias       String  @default("")
+  galleryImages   String? // Can store a JSON array of strings: '["url1", "url2"]'
 }

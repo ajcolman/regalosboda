@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { prisma } from '@/lib/prisma';
 import styles from './home.module.css';
+import GalleryClient from './GalleryClient';
 
 export const revalidate = 0;
 
@@ -14,7 +15,20 @@ export default async function Home() {
     settings = await prisma.settings.create({ data: {} });
   }
 
-  const galleryArray: string[] = settings.galleryImages ? JSON.parse(settings.galleryImages) : [];
+  let galleryArray: string[] = [];
+  try {
+    if (settings.galleryImages) {
+      let parsed = JSON.parse(settings.galleryImages);
+      if (typeof parsed === 'string') {
+        parsed = JSON.parse(parsed);
+      }
+      if (Array.isArray(parsed)) {
+        galleryArray = parsed;
+      }
+    }
+  } catch (e) {
+    console.error('Failed to parse gallery array', e);
+  }
 
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat('es-PY', { style: 'currency', currency: 'PYG', minimumFractionDigits: 0 }).format(price);
@@ -30,6 +44,11 @@ export default async function Home() {
           </>
         )}
         <div className={styles.heroContent}>
+          {settings.avatarPhotoUrl && (
+            <div className={styles.avatarContainer}>
+              <img src={settings.avatarPhotoUrl} alt="Novios" className={styles.avatarImage} />
+            </div>
+          )}
           <h1 className={styles.heroTitle}>{settings.coupleNames}</h1>
           <p className={styles.heroSubtitle}>
             Nuestra mayor alegría es compartir este día con ustedes.
@@ -44,13 +63,7 @@ export default async function Home() {
         {galleryArray.length > 0 && (
           <section>
             <h2 className={styles.sectionTitle}>Nuestra Historia</h2>
-            <div className={styles.galleryGrid}>
-              {galleryArray.map((imgUrl, idx) => (
-                <div key={idx} className={styles.galleryImageContainer}>
-                  <img src={imgUrl} alt={`Gallery ${idx}`} className={styles.galleryImage} />
-                </div>
-              ))}
-            </div>
+            <GalleryClient images={galleryArray} />
           </section>
         )}
 

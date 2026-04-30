@@ -17,10 +17,12 @@ interface Settings {
   id: string;
   coupleNames: string;
   coverPhotoUrl: string | null;
+  avatarPhotoUrl: string | null;
   bankName: string;
   bankAccount: string;
   bankHolder: string;
   bankDocument: string;
+  bankAlias: string;
   galleryImages: string | null;
 }
 
@@ -32,7 +34,22 @@ export default function AdminClient({ initialGifts, initialSettings }: { initial
   
   // Gallery input state
   const [newGalleryUrl, setNewGalleryUrl] = useState('');
-  const galleryArray: string[] = settings.galleryImages ? JSON.parse(settings.galleryImages) : [];
+  
+  let galleryArray: string[] = [];
+  try {
+    if (settings.galleryImages) {
+      let parsed = JSON.parse(settings.galleryImages);
+      // Handle double stringification
+      if (typeof parsed === 'string') {
+        parsed = JSON.parse(parsed);
+      }
+      if (Array.isArray(parsed)) {
+        galleryArray = parsed;
+      }
+    }
+  } catch (e) {
+    console.error('Failed to parse gallery images', e);
+  }
 
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat('es-PY', { style: 'currency', currency: 'PYG', minimumFractionDigits: 0 }).format(price);
@@ -138,13 +155,35 @@ export default function AdminClient({ initialGifts, initialSettings }: { initial
     saveSettings({ galleryImages: JSON.stringify(newArray) as any });
   };
 
+  const handleLogout = async () => {
+    try {
+      await fetch('/api/auth', { method: 'DELETE' });
+      window.location.href = '/admin/login';
+    } catch (e) {
+      console.error(e);
+      window.location.href = '/admin/login';
+    }
+  };
+
+  const downloadTemplate = () => {
+    const csvContent = "title,description,price,image_url\nRegalo Ejemplo,Descripción del regalo,150000,https://ejemplo.com/imagen.jpg";
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.setAttribute('href', url);
+    link.setAttribute('download', 'plantilla_regalos.csv');
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   return (
     <div className={styles.container}>
       <header className={styles.header}>
         <h1 className={styles.title}>Mantenimiento de Regalos</h1>
         <button 
           className={styles.logoutBtn} 
-          onClick={() => { document.cookie = "admin_auth=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;"; window.location.href='/admin/login'; }}
+          onClick={handleLogout}
         >
           Cerrar Sesión
         </button>
@@ -164,6 +203,10 @@ export default function AdminClient({ initialGifts, initialSettings }: { initial
             <div>
               <label style={{display: 'block', fontSize: '0.85rem', marginBottom: '0.3rem'}}>URL de Foto Principal (Portada)</label>
               <input type="text" value={settings.coverPhotoUrl || ''} onChange={e => setSettings({...settings, coverPhotoUrl: e.target.value})} placeholder="https://..." style={{width: '100%', padding: '8px', borderRadius: '4px', border: '1px solid var(--border)'}} />
+            </div>
+            <div>
+              <label style={{display: 'block', fontSize: '0.85rem', marginBottom: '0.3rem'}}>URL de Foto Avatar (Circular)</label>
+              <input type="text" value={settings.avatarPhotoUrl || ''} onChange={e => setSettings({...settings, avatarPhotoUrl: e.target.value})} placeholder="https://..." style={{width: '100%', padding: '8px', borderRadius: '4px', border: '1px solid var(--border)'}} />
             </div>
             
             <hr style={{margin: '1rem 0', borderColor: 'var(--border)'}} />
@@ -186,6 +229,10 @@ export default function AdminClient({ initialGifts, initialSettings }: { initial
                 <label style={{display: 'block', fontSize: '0.85rem', marginBottom: '0.3rem'}}>C.I. / RUC</label>
                 <input type="text" value={settings.bankDocument} onChange={e => setSettings({...settings, bankDocument: e.target.value})} style={{width: '100%', padding: '8px', borderRadius: '4px', border: '1px solid var(--border)'}} />
               </div>
+              <div style={{gridColumn: '1 / -1'}}>
+                <label style={{display: 'block', fontSize: '0.85rem', marginBottom: '0.3rem'}}>Alias</label>
+                <input type="text" value={settings.bankAlias || ''} onChange={e => setSettings({...settings, bankAlias: e.target.value})} style={{width: '100%', padding: '8px', borderRadius: '4px', border: '1px solid var(--border)'}} />
+              </div>
             </div>
             
             <button className="btn-primary" onClick={() => saveSettings(settings)} disabled={settingsLoading} style={{marginTop: '1rem'}}>
@@ -203,12 +250,12 @@ export default function AdminClient({ initialGifts, initialSettings }: { initial
           </div>
           <div style={{display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.5rem'}}>
             {galleryArray.map((img, index) => (
-              <div key={index} style={{position: 'relative', paddingTop: '100%', backgroundColor: '#eee', borderRadius: '4px', overflow: 'hidden'}}>
+              <div key={index} style={{position: 'relative', paddingTop: '100%', backgroundColor: 'var(--border)', borderRadius: '4px', overflow: 'hidden'}}>
                 <img src={img} alt={`Gallery ${index}`} style={{position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover'}} />
-                <button onClick={() => removeGalleryImage(index)} style={{position: 'absolute', top: '5px', right: '5px', background: 'red', color: 'white', border: 'none', borderRadius: '50%', width: '20px', height: '20px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '10px'}}>X</button>
+                <button onClick={() => removeGalleryImage(index)} style={{position: 'absolute', top: '5px', right: '5px', background: '#e53935', color: 'white', border: 'none', borderRadius: '50%', width: '20px', height: '20px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '10px'}}>X</button>
               </div>
             ))}
-            {galleryArray.length === 0 && <p style={{gridColumn: '1/-1', color: '#666', fontSize: '0.85rem'}}>No hay fotos en la galería.</p>}
+            {galleryArray.length === 0 && <p style={{gridColumn: '1/-1', color: 'var(--text-muted)', fontSize: '0.85rem'}}>No hay fotos en la galería.</p>}
           </div>
         </div>
 
@@ -216,8 +263,13 @@ export default function AdminClient({ initialGifts, initialSettings }: { initial
 
       <div className={styles.actions}>
         <div className={styles.uploadSection}>
-          <h3>Carga Masiva (CSV)</h3>
-          <p style={{fontSize: '0.85rem', color: '#666', marginBottom: '1rem'}}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+            <h3 style={{ margin: 0 }}>Carga Masiva (CSV)</h3>
+            <button onClick={downloadTemplate} className={styles.actionBtn} style={{ fontSize: '0.9rem', marginBottom: 0 }}>
+              Descargar Plantilla
+            </button>
+          </div>
+          <p style={{fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: '1rem'}}>
             El archivo CSV debe contener las columnas: <code>title, description, image_url, price</code>
           </p>
           <input 
@@ -256,7 +308,7 @@ export default function AdminClient({ initialGifts, initialSettings }: { initial
                 </td>
                 <td>
                   {gift.transfer_reference ? (
-                    <code style={{background: '#f4f4f4', padding: '2px 6px', borderRadius: '4px'}}>
+                    <code style={{background: 'var(--border)', color: 'var(--foreground)', padding: '2px 6px', borderRadius: '4px'}}>
                       {gift.transfer_reference}
                     </code>
                   ) : '-'}
@@ -280,7 +332,7 @@ export default function AdminClient({ initialGifts, initialSettings }: { initial
             ))}
             {gifts.length === 0 && (
               <tr>
-                <td colSpan={5} style={{textAlign: 'center', color: '#666'}}>No hay regalos registrados</td>
+                <td colSpan={5} style={{textAlign: 'center', color: 'var(--text-muted)'}}>No hay regalos registrados</td>
               </tr>
             )}
           </tbody>

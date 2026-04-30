@@ -1,21 +1,28 @@
 :root {
   --background: #FAF9F6;
   --foreground: #2C2C2C;
-  --primary: #C5A880;
-  --primary-dark: #b09165;
-  --secondary: #8A9A86;
+  --primary: #8C6A46; /* Oscurecido para mejor contraste con texto blanco */
+  --primary-dark: #6C5032;
+  --secondary: #5C6A5A;
   --surface: #ffffff;
   --border: #e2e0d8;
   --shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  --text-muted: #666666;
+  --overlay: rgba(255, 255, 255, 0.6);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #1a1a1a;
     --foreground: #f4f4f4;
+    --primary: #C5A880; /* En modo oscuro puede ser más claro */
+    --primary-dark: #b09165;
+    --secondary: #8A9A86;
     --surface: #262626;
     --border: #3d3d3d;
     --shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    --text-muted: #b0b0b0;
+    --overlay: rgba(0, 0, 0, 0.6);
   }
 }
 
@@ -60,6 +67,19 @@ button {
   font-family: inherit;
 }
 
+input[type="text"], input[type="file"] {
+  background-color: var(--surface);
+  color: var(--foreground);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  font-family: inherit;
+}
+
+input[type="text"]:focus {
+  outline: none;
+  border-color: var(--primary);
+}
+
 /* Common utility classes for global use */
 .container {
   width: 100%;
@@ -70,16 +90,23 @@ button {
 
 .btn-primary {
   background-color: var(--primary);
-  color: white;
+  color: #ffffff;
   border: none;
   padding: 12px 24px;
   border-radius: 4px;
   cursor: pointer;
   font-size: 1rem;
+  font-weight: 600;
   transition: background-color 0.3s ease, transform 0.2s ease;
   font-family: var(--font-sans);
   text-transform: uppercase;
   letter-spacing: 1px;
+}
+
+@media (prefers-color-scheme: dark) {
+  .btn-primary {
+    color: #1a1a1a; /* Texto oscuro sobre el botón claro en dark mode */
+  }
 }
 
 .btn-primary:hover {
@@ -92,7 +119,8 @@ button {
 }
 
 .btn-primary:disabled {
-  background-color: #cccccc;
+  background-color: var(--border);
+  color: var(--text-muted);
   cursor: not-allowed;
   transform: none;
 }

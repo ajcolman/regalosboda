@@ -18,6 +18,7 @@ interface Settings {
   bankAccount: string;
   bankHolder: string;
   bankDocument: string;
+  bankAlias: string;
 }
 
 export default function GiftDetailClient({ gift, settings }: { gift: Gift, settings: Settings }) {
@@ -99,6 +100,7 @@ export default function GiftDetailClient({ gift, settings }: { gift: Gift, setti
             <p><strong>Cuenta:</strong> {settings.bankAccount}</p>
             <p><strong>Titular:</strong> {settings.bankHolder}</p>
             <p><strong>Cédula/RUC:</strong> {settings.bankDocument}</p>
+            {settings.bankAlias && <p><strong>Alias:</strong> {settings.bankAlias}</p>}
           </div>
 
           <form className={styles.form} onSubmit={handleSubmit}>

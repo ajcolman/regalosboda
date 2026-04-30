@@ -60,20 +60,20 @@
 .price {
   font-family: var(--font-sans);
   font-size: 1.5rem;
-  color: var(--primary-dark);
+  color: var(--primary);
   font-weight: 600;
   margin-bottom: 1.5rem;
 }
 
 .description {
-  color: #555;
+  color: var(--text-muted);
   line-height: 1.6;
   margin-bottom: 2rem;
   font-size: 1rem;
 }
 
 .bankDetails {
-  background-color: #FAF9F6;
+  background-color: var(--surface);
   border: 1px dashed var(--primary);
   padding: 1.5rem;
   border-radius: 4px;
@@ -84,7 +84,7 @@
   font-family: var(--font-sans);
   font-size: 1.1rem;
   margin-bottom: 1rem;
-  color: var(--primary-dark);
+  color: var(--primary);
   text-transform: uppercase;
   letter-spacing: 1px;
 }
@@ -119,6 +119,8 @@
   border-radius: 4px;
   font-size: 1rem;
   font-family: var(--font-sans);
+  background-color: var(--surface);
+  color: var(--foreground);
 }
 
 .inputGroup input:focus {
@@ -139,13 +141,13 @@
 }
 
 .successMessage p {
-  color: #555;
+  color: var(--text-muted);
   margin-bottom: 2rem;
 }
 
 .backLink {
   display: inline-block;
-  color: var(--primary-dark);
+  color: var(--primary);
   text-decoration: underline;
   margin-top: 2rem;
   font-weight: 600;

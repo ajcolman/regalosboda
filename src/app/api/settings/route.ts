@@ -14,6 +14,7 @@ export async function GET() {
           bankAccount: '000000',
           bankHolder: 'Titular',
           bankDocument: '0.000.000',
+          bankAlias: '',
           galleryImages: '[]',
         }
       });
@@ -41,11 +42,15 @@ export async function PATCH(request: Request) {
       data: {
         coupleNames: body.coupleNames ?? settings.coupleNames,
         coverPhotoUrl: body.coverPhotoUrl ?? settings.coverPhotoUrl,
+        avatarPhotoUrl: body.avatarPhotoUrl ?? settings.avatarPhotoUrl,
         bankName: body.bankName ?? settings.bankName,
         bankAccount: body.bankAccount ?? settings.bankAccount,
         bankHolder: body.bankHolder ?? settings.bankHolder,
         bankDocument: body.bankDocument ?? settings.bankDocument,
-        galleryImages: body.galleryImages !== undefined ? JSON.stringify(body.galleryImages) : settings.galleryImages,
+        bankAlias: body.bankAlias ?? settings.bankAlias,
+        galleryImages: body.galleryImages !== undefined 
+          ? (typeof body.galleryImages === 'string' ? body.galleryImages : JSON.stringify(body.galleryImages)) 
+          : settings.galleryImages,
       }
     });
 

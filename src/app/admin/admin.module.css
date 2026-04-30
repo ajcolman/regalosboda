@@ -79,16 +79,26 @@
 }
 
 .table th {
-  background-color: #f9f9f9;
+  background-color: var(--surface);
   font-weight: 600;
   text-transform: uppercase;
   font-size: 0.85rem;
   letter-spacing: 0.05em;
-  color: #555;
+  color: var(--text-muted);
+}
+
+.table tbody tr {
+  transition: background-color 0.2s;
 }
 
 .table tbody tr:hover {
-  background-color: #fafafa;
+  background-color: rgba(0, 0, 0, 0.03);
+}
+
+@media (prefers-color-scheme: dark) {
+  .table tbody tr:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+  }
 }
 
 .statusBadge {
@@ -100,29 +110,29 @@
 }
 
 .status-AVAILABLE {
-  background-color: #e8f5e9;
-  color: #2e7d32;
+  background-color: rgba(46, 125, 50, 0.15);
+  color: #4caf50;
 }
 
 .status-PENDING_CONFIRMATION {
-  background-color: #fff3e0;
-  color: #f57c00;
+  background-color: rgba(245, 124, 0, 0.15);
+  color: #ffa726;
 }
 
 .status-GIFTED {
-  background-color: #e0f7fa;
-  color: #00838f;
+  background-color: rgba(0, 131, 143, 0.15);
+  color: #26c6da;
 }
 
 .actionBtn {
   background: transparent;
   border: none;
   cursor: pointer;
-  color: var(--primary-dark);
+  color: var(--primary);
   text-decoration: underline;
   margin-right: 0.5rem;
 }
 
 .actionBtn.danger {
-  color: #d32f2f;
+  color: #e53935;
 }

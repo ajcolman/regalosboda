@@ -1,0 +1,34 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Gift {
+  id                 String   @id @default(cuid())
+  title              String
+  description        String?
+  image_url          String?
+  price              Float
+  status             String   @default("AVAILABLE") // AVAILABLE, PENDING_CONFIRMATION, GIFTED
+  transfer_reference String?
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+}
+
+model Settings {
+  id            String  @id @default(cuid())
+  coupleNames   String  @default("Nuestros Nombres")
+  coverPhotoUrl String?
+  bankName      String  @default("Banco")
+  bankAccount   String  @default("000000")
+  bankHolder    String  @default("Titular")
+  bankDocument  String  @default("0.000.000")
+  galleryImages String? // Can store a JSON array of strings: '["url1", "url2"]'
+}

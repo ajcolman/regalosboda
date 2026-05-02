@@ -177,6 +177,15 @@ export default function AdminClient({ initialGifts, initialSettings }: { initial
     document.body.removeChild(link);
   };
 
+  const translateStatus = (status: string) => {
+    switch (status) {
+      case 'AVAILABLE': return 'Disponible';
+      case 'PENDING_CONFIRMATION': return 'Por Confirmar';
+      case 'GIFTED': return 'Regalado';
+      default: return status;
+    }
+  };
+
   return (
     <div className={styles.container}>
       <header className={styles.header}>
@@ -303,7 +312,7 @@ export default function AdminClient({ initialGifts, initialSettings }: { initial
                 <td>{formatPrice(gift.price)}</td>
                 <td>
                   <span className={`${styles.statusBadge} ${styles[`status-${gift.status}`]}`}>
-                    {gift.status}
+                    {translateStatus(gift.status)}
                   </span>
                 </td>
                 <td>

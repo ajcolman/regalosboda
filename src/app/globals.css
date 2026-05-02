@@ -1,7 +1,7 @@
 :root {
   --background: #FAF9F6;
   --foreground: #2C2C2C;
-  --primary: #8C6A46; /* Oscurecido para mejor contraste con texto blanco */
+  --primary: #8C6A46;
   --primary-dark: #6C5032;
   --secondary: #5C6A5A;
   --surface: #ffffff;
@@ -15,7 +15,7 @@
   :root {
     --background: #1a1a1a;
     --foreground: #f4f4f4;
-    --primary: #C5A880; /* En modo oscuro puede ser más claro */
+    --primary: #C5A880;
     --primary-dark: #b09165;
     --secondary: #8A9A86;
     --surface: #262626;
@@ -26,8 +26,9 @@
   }
 }
 
+/* Scroll suave y base sin restricción de altura en html */
 html {
-  height: 100%;
+  scroll-behavior: smooth;
 }
 
 html,
@@ -39,9 +40,7 @@ body {
 }
 
 body {
-  min-height: 100%;
-  display: flex;
-  flex-direction: column;
+  min-height: 100dvh;
   font-family: var(--font-sans), sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -101,11 +100,13 @@ input[type="text"]:focus {
   font-family: var(--font-sans);
   text-transform: uppercase;
   letter-spacing: 1px;
+  position: relative;
+  overflow: hidden;
 }
 
 @media (prefers-color-scheme: dark) {
   .btn-primary {
-    color: #1a1a1a; /* Texto oscuro sobre el botón claro en dark mode */
+    color: #1a1a1a;
   }
 }
 
@@ -125,32 +126,7 @@ input[type="text"]:focus {
   transform: none;
 }
 
-/* =============================
-   Scroll-Reveal Animations
-   ============================= */
-html {
-  scroll-behavior: smooth;
-}
-
-.reveal {
-  opacity: 0;
-  transform: translateY(30px);
-  transition: opacity 0.6s ease, transform 0.6s ease;
-}
-
-.reveal.visible {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-/* =============================
-   Ripple Effect for Buttons
-   ============================= */
-.btn-primary {
-  position: relative;
-  overflow: hidden;
-}
-
+/* Ripple Effect */
 .btn-primary::after {
   content: '';
   position: absolute;
@@ -169,4 +145,18 @@ html {
   width: 300px;
   height: 300px;
   opacity: 1;
+}
+
+/* =============================
+   Scroll-Reveal Animations
+   ============================= */
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
 }

@@ -94,7 +94,7 @@ export default async function Home() {
           </div>
         </section>
 
-        <section>
+        <section id="regalos">
           <h2 className={styles.sectionTitle}>Lista de Regalos</h2>
           <div className={styles.grid}>
             {gifts.map((gift) => {

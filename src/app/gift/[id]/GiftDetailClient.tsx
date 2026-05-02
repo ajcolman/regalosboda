@@ -71,7 +71,7 @@ export default function GiftDetailClient({ gift, settings }: { gift: Gift, setti
             <h2>¡Muchas gracias, {guestName || 'querido invitado'}!</h2>
             <p>Hemos recibido la confirmación de tu regalo: <strong>{gift.title}</strong>.</p>
             <p>Tu detalle nos llena de alegría y será muy especial para nuestra nueva etapa.</p>
-            <Link href="/" className={styles.backLink}>Volver a la lista de regalos</Link>
+            <Link href="/#regalos" className={styles.backLink}>Volver a la lista de regalos</Link>
           </div>
         </div>
       </div>
@@ -80,7 +80,7 @@ export default function GiftDetailClient({ gift, settings }: { gift: Gift, setti
 
   return (
     <div className={styles.container}>
-      <Link href="/" style={{display: 'inline-block', marginBottom: '1rem', color: 'var(--primary-dark)', fontWeight: 600}}>&larr; Volver</Link>
+      <Link href="/#regalos" style={{display: 'inline-block', marginBottom: '1rem', color: 'var(--primary-dark)', fontWeight: 600}}>&larr; Volver</Link>
       <div className={styles.card}>
         <div className={styles.imageContainer}>
           {gift.image_url ? (

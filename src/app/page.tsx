@@ -73,6 +73,27 @@ export default async function Home() {
           </section>
         )}
 
+        <section className={styles.instructionsSection}>
+          <h2 className={styles.sectionTitle}>¿Cómo funciona?</h2>
+          <div className={styles.stepsGrid}>
+            <div className={styles.stepCard}>
+              <div className={styles.stepNumber}>1</div>
+              <h3>Elige un Regalo</h3>
+              <p>Explora nuestra lista de regalos a continuación y selecciona el detalle que más te guste dándole clic a "Regalar".</p>
+            </div>
+            <div className={styles.stepCard}>
+              <div className={styles.stepNumber}>2</div>
+              <h3>Transfiere el Monto</h3>
+              <p>Realiza una transferencia bancaria a la cuenta de los novios por el valor del regalo seleccionado.</p>
+            </div>
+            <div className={styles.stepCard}>
+              <div className={styles.stepNumber}>3</div>
+              <h3>Confirma tu Regalo</h3>
+              <p>Ingresa tu nombre y el número de comprobante de transferencia en la plataforma para que podamos agradecerte.</p>
+            </div>
+          </div>
+        </section>
+
         <section>
           <h2 className={styles.sectionTitle}>Lista de Regalos</h2>
           <div className={styles.grid}>

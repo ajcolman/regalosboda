@@ -33,6 +33,11 @@ export default function AdminClient({ initialGifts, initialSettings }: { initial
   const [loading, setLoading] = useState(false);
   const [settingsLoading, setSettingsLoading] = useState(false);
   
+  // Modal state
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editingGift, setEditingGift] = useState<Partial<Gift> | null>(null);
+  const [modalLoading, setModalLoading] = useState(false);
+
   // Gallery input state
   const [newGalleryUrl, setNewGalleryUrl] = useState('');
   
@@ -141,6 +146,50 @@ export default function AdminClient({ initialGifts, initialSettings }: { initial
       alert('Error de conexión');
     } finally {
       setSettingsLoading(false);
+    }
+  };
+
+  const openNewGiftModal = () => {
+    setEditingGift({ title: '', description: '', price: 0, image_url: '' });
+    setIsModalOpen(true);
+  };
+
+  const openEditGiftModal = (gift: Gift) => {
+    setEditingGift({ ...gift });
+    setIsModalOpen(true);
+  };
+
+  const handleSaveGift = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingGift) return;
+    
+    setModalLoading(true);
+    try {
+      const isEditing = !!editingGift.id;
+      const url = isEditing ? `/api/gifts/${editingGift.id}` : '/api/gifts';
+      const method = isEditing ? 'PATCH' : 'POST';
+
+      const res = await fetch(url, {
+        method,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(editingGift),
+      });
+
+      if (res.ok) {
+        const savedGift = await res.json();
+        if (isEditing) {
+          setGifts(gifts.map(g => g.id === savedGift.id ? { ...g, ...savedGift } : g));
+        } else {
+          setGifts([savedGift, ...gifts]);
+        }
+        setIsModalOpen(false);
+      } else {
+        alert('Error al guardar el regalo');
+      }
+    } catch (error) {
+      alert('Error de conexión');
+    } finally {
+      setModalLoading(false);
     }
   };
 
@@ -279,12 +328,17 @@ export default function AdminClient({ initialGifts, initialSettings }: { initial
 
       <div className={styles.uploadSection}>
         <div className={styles.uploadHeader}>
-          <h3 className={styles.cardTitle} style={{margin: 0}}>Carga Masiva (CSV)</h3>
+          <div style={{display: 'flex', gap: '1rem', alignItems: 'center'}}>
+            <h3 className={styles.cardTitle} style={{margin: 0}}>Regalos Registrados</h3>
+            <button className="btn-primary" onClick={openNewGiftModal} style={{padding: '0.4rem 1rem', fontSize: '0.9rem'}}>
+              + Nuevo Regalo
+            </button>
+          </div>
           <button onClick={downloadTemplate} className={styles.btnOutline}>
-            Descargar Plantilla
+            Descargar Plantilla CSV
           </button>
         </div>
-        <p>El archivo CSV debe contener las columnas: <code>title, description, image_url, price</code></p>
+        <p>También puedes cargar masivamente usando un archivo CSV (columnas: <code>title, description, image_url, price</code>)</p>
         <input 
           type="file" 
           accept=".csv" 
@@ -332,6 +386,9 @@ export default function AdminClient({ initialGifts, initialSettings }: { initial
                 </td>
                 <td>
                   <div className={styles.actionsCell}>
+                    <button className={styles.actionPill} onClick={() => openEditGiftModal(gift)}>
+                      Editar
+                    </button>
                     {gift.status === 'PENDING_CONFIRMATION' && (
                       <button className={styles.actionPill} onClick={() => updateStatus(gift.id, 'GIFTED')}>
                         Aprobar
@@ -359,6 +416,45 @@ export default function AdminClient({ initialGifts, initialSettings }: { initial
           </tbody>
         </table>
       </div>
+
+      {/* Gift Modal */}
+      {isModalOpen && editingGift && (
+        <div className={styles.modalOverlay}>
+          <div className={styles.modal}>
+            <div className={styles.modalHeader}>
+              <h2>{editingGift.id ? 'Editar Regalo' : 'Nuevo Regalo'}</h2>
+              <button className={styles.closeBtn} onClick={() => setIsModalOpen(false)}>✕</button>
+            </div>
+            <form onSubmit={handleSaveGift}>
+              <div className={styles.modalBody}>
+                <div className={styles.formGroup}>
+                  <label className={styles.label}>Título *</label>
+                  <input type="text" className={styles.input} required value={editingGift.title || ''} onChange={e => setEditingGift({...editingGift, title: e.target.value})} />
+                </div>
+                <div className={styles.formGroup}>
+                  <label className={styles.label}>Precio (GS.) *</label>
+                  <input type="number" className={styles.input} required value={editingGift.price || ''} onChange={e => setEditingGift({...editingGift, price: Number(e.target.value)})} />
+                </div>
+                <div className={styles.formGroup}>
+                  <label className={styles.label}>URL de la Imagen</label>
+                  <input type="text" className={styles.input} value={editingGift.image_url || ''} onChange={e => setEditingGift({...editingGift, image_url: e.target.value})} placeholder="https://..." />
+                </div>
+                <div className={styles.formGroup}>
+                  <label className={styles.label}>Descripción</label>
+                  <textarea className={styles.input} rows={3} value={editingGift.description || ''} onChange={e => setEditingGift({...editingGift, description: e.target.value})}></textarea>
+                </div>
+              </div>
+              <div className={styles.modalFooter}>
+                <button type="button" className={styles.btnOutline} onClick={() => setIsModalOpen(false)}>Cancelar</button>
+                <button type="submit" className="btn-primary" disabled={modalLoading}>
+                  {modalLoading ? 'Guardando...' : 'Guardar Regalo'}
+               </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 }

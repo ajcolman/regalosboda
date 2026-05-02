@@ -457,3 +457,78 @@
 .btnGift:active:not(:disabled) {
   transform: scale(0.97) !important;
 }
+
+/* =============================
+   Thanks Section
+   ============================= */
+.thanksSection {
+  padding: 4rem 1rem 6rem;
+  text-align: center;
+}
+
+.thanksCard {
+  max-width: 700px;
+  margin: 0 auto;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 4rem 3rem;
+  box-shadow: 0 10px 50px rgba(0, 0, 0, 0.07);
+  position: relative;
+  overflow: hidden;
+}
+
+.thanksCard::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--primary), var(--secondary), var(--primary));
+  background-size: 200% 100%;
+  animation: shimmer 3s linear infinite;
+}
+
+@keyframes shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+.thanksHeart {
+  font-size: 3rem;
+  margin-bottom: 1.5rem;
+  color: var(--primary);
+  display: block;
+  animation: heartbeat 1.5s ease infinite;
+}
+
+@keyframes heartbeat {
+  0%, 100% { transform: scale(1); }
+  14%       { transform: scale(1.15); }
+  28%       { transform: scale(1); }
+  42%       { transform: scale(1.1); }
+  70%       { transform: scale(1); }
+}
+
+.thanksTitle {
+  font-family: var(--font-script);
+  font-size: 3rem;
+  color: var(--foreground);
+  margin-bottom: 1.5rem;
+}
+
+.thanksText {
+  font-family: var(--font-sans);
+  font-size: 1.1rem;
+  color: var(--text-muted);
+  line-height: 1.9;
+  max-width: 520px;
+  margin: 0 auto 2rem;
+}
+
+.thanksSignature {
+  font-family: var(--font-script);
+  font-size: 2.2rem;
+  color: var(--primary);
+}

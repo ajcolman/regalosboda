@@ -158,6 +158,22 @@ export default async function Home() {
             )}
           </div>
         </section>
+
+        <ScrollReveal delay={100}>
+          <section className={styles.thanksSection}>
+            <div className={styles.thanksCard}>
+              <div className={styles.thanksHeart}>♥</div>
+              <h2 className={styles.thanksTitle}>¡Gracias de Corazón!</h2>
+              <p className={styles.thanksText}>
+                Su presencia y cariño son el regalo más grande que podemos recibir.
+                Cada detalle que nos brindan nos ayuda a construir el hogar y los sueños
+                que hemos soñado juntos. Los queremos mucho.
+              </p>
+              <p className={styles.thanksSignature}>{settings.coupleNames}</p>
+            </div>
+          </section>
+        </ScrollReveal>
+
       </div>
     </main>
   );

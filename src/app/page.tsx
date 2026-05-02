@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { prisma } from '@/lib/prisma';
 import styles from './home.module.css';
 import GalleryClient from './GalleryClient';
+import ScrollReveal from '@/components/ScrollReveal';
 
 export const revalidate = 0;
 
@@ -67,15 +68,18 @@ export default async function Home() {
         
         {/* Gallery Section */}
         {galleryArray.length > 0 && (
-          <section>
-            <h2 className={styles.sectionTitle}>Nuestra Historia</h2>
-            <GalleryClient images={galleryArray} />
-          </section>
+          <ScrollReveal>
+            <section>
+              <h2 className={styles.sectionTitle}>Nuestra Historia</h2>
+              <GalleryClient images={galleryArray} />
+            </section>
+          </ScrollReveal>
         )}
 
-        <section className={styles.instructionsSection}>
-          <h2 className={styles.sectionTitle}>¿Cómo funciona?</h2>
-          <div className={styles.stepsGrid}>
+        <ScrollReveal delay={100}>
+          <section className={styles.instructionsSection}>
+            <h2 className={styles.sectionTitle}>¿Cómo funciona?</h2>
+            <div className={styles.stepsGrid}>
             <div className={styles.stepCard}>
               <div className={styles.stepNumber}>1</div>
               <h3>Elige un Regalo</h3>
@@ -93,9 +97,12 @@ export default async function Home() {
             </div>
           </div>
         </section>
+        </ScrollReveal>
 
         <section id="regalos">
-          <h2 className={styles.sectionTitle}>Lista de Regalos</h2>
+          <ScrollReveal delay={50}>
+            <h2 className={styles.sectionTitle}>Lista de Regalos</h2>
+          </ScrollReveal>
           <div className={styles.grid}>
             {gifts.map((gift) => {
               const isAvailable = gift.status === 'AVAILABLE';
@@ -112,7 +119,8 @@ export default async function Home() {
                   : 'Regalado';
 
               return (
-                <div key={gift.id} className={`${styles.card} ${!isAvailable ? styles.cardGifted : ''}`}>
+                <ScrollReveal key={gift.id} delay={gifts.indexOf(gift) * 60}>
+                  <div className={`${styles.card} ${!isAvailable ? styles.cardGifted : ''}`}>
                   <div className={styles.cardImageContainer}>
                     <div className={`${styles.statusBadge} ${statusClass}`}>
                       {statusText}
@@ -138,7 +146,8 @@ export default async function Home() {
                       </button>
                     )}
                   </div>
-                </div>
+                  </div>
+                </ScrollReveal>
               );
             })}
             

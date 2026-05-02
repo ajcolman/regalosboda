@@ -81,6 +81,13 @@
   margin-bottom: 2rem;
   border: 5px solid rgba(255, 255, 255, 0.85);
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
+  animation: fadeInDown 1s ease forwards;
+}
+
+.avatarContainer:hover {
+  transform: scale(1.05);
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.5), 0 0 0 6px rgba(255,255,255,0.2);
 }
 
 @media (min-width: 768px) {
@@ -94,6 +101,11 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.avatarContainer:hover .avatarImage {
+  transform: scale(1.08);
 }
 
 .heroTitle {
@@ -101,6 +113,7 @@
   font-size: 5rem;
   margin-bottom: 1rem;
   text-shadow: 2px 2px 8px rgba(0,0,0,0.3);
+  animation: fadeInUp 1s ease 0.3s both;
 }
 
 @media (min-width: 768px) {
@@ -116,6 +129,17 @@
   margin: 0 auto;
   line-height: 1.6;
   text-shadow: 1px 1px 4px rgba(0,0,0,0.5);
+  animation: fadeInUp 1s ease 0.6s both;
+}
+
+@keyframes fadeInDown {
+  from { opacity: 0; transform: translateY(-20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
 .sectionTitle {
@@ -134,6 +158,11 @@
   height: 2px;
   background-color: var(--primary);
   margin: 1rem auto 0;
+  transition: width 0.4s ease;
+}
+
+.sectionTitle:hover::after {
+  width: 120px;
 }
 
 .instructionsSection {
@@ -155,11 +184,17 @@
   border: 1px solid var(--border);
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
   position: relative;
-  transition: transform 0.3s ease;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
 }
 
 .stepCard:hover {
-  transform: translateY(-5px);
+  transform: translateY(-8px);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.12);
+  border-color: var(--primary);
+}
+
+.stepCard:hover .stepNumber {
+  transform: scale(1.15) rotate(-5deg);
 }
 
 .stepNumber {
@@ -176,6 +211,7 @@
   margin: 0 auto 1.5rem;
   font-family: var(--font-serif);
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .stepCard h3 {
@@ -298,16 +334,18 @@
 .card {
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: 8px;
+  border-radius: 12px;
   overflow: hidden;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.35s ease, border-color 0.3s ease;
   display: flex;
   flex-direction: column;
+  cursor: pointer;
 }
 
 .card:hover {
-  transform: translateY(-5px);
-  box-shadow: var(--shadow);
+  transform: translateY(-8px);
+  box-shadow: 0 20px 50px rgba(0,0,0,0.12);
+  border-color: var(--primary);
 }
 
 .cardImageContainer {
@@ -322,11 +360,11 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.5s ease;
+  transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 .card:hover .cardImage {
-  transform: scale(1.05);
+  transform: scale(1.08);
 }
 
 .cardContent {
@@ -373,6 +411,11 @@
   letter-spacing: 1px;
   z-index: 10;
   box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+  transition: transform 0.2s ease;
+}
+
+.card:hover .statusBadge {
+  transform: scale(1.05);
 }
 
 .statusAvailable {
@@ -403,5 +446,14 @@
   display: inline-block;
   text-align: center;
   width: 100%;
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease !important;
 }
 
+.btnGift:hover:not(:disabled) {
+  transform: translateY(-3px) !important;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.2) !important;
+}
+
+.btnGift:active:not(:disabled) {
+  transform: scale(0.97) !important;
+}

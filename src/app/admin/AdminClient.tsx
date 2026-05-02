@@ -8,6 +8,7 @@ interface Gift {
   id: string;
   title: string;
   description: string | null;
+  image_url: string | null;
   price: number;
   status: string;
   transfer_reference: string | null;
@@ -198,98 +199,100 @@ export default function AdminClient({ initialGifts, initialSettings }: { initial
         </button>
       </header>
 
-      <div style={{ display: 'flex', gap: '2rem', flexWrap: 'wrap', marginBottom: '2rem' }}>
+      <div className={styles.dashboardGrid}>
         
         {/* Settings Box */}
-        <div className={styles.settingsBox} style={{flex: '1', minWidth: '300px', background: 'var(--surface)', padding: '1.5rem', borderRadius: '8px', border: '1px solid var(--border)', boxShadow: 'var(--shadow)'}}>
-          <h3 style={{marginBottom: '1.5rem', fontFamily: 'var(--font-sans)'}}>Datos de la Boda</h3>
+        <div className={styles.card}>
+          <h3 className={styles.cardTitle}>Configuración General</h3>
           
-          <div style={{display: 'flex', flexDirection: 'column', gap: '1rem'}}>
-            <div>
-              <label style={{display: 'block', fontSize: '0.85rem', marginBottom: '0.3rem'}}>Nombres de los Novios</label>
-              <input type="text" value={settings.coupleNames} onChange={e => setSettings({...settings, coupleNames: e.target.value})} style={{width: '100%', padding: '8px', borderRadius: '4px', border: '1px solid var(--border)'}} />
-            </div>
-            <div>
-              <label style={{display: 'block', fontSize: '0.85rem', marginBottom: '0.3rem'}}>URL de Foto Principal (Portada)</label>
-              <input type="text" value={settings.coverPhotoUrl || ''} onChange={e => setSettings({...settings, coverPhotoUrl: e.target.value})} placeholder="https://..." style={{width: '100%', padding: '8px', borderRadius: '4px', border: '1px solid var(--border)'}} />
-            </div>
-            <div>
-              <label style={{display: 'block', fontSize: '0.85rem', marginBottom: '0.3rem'}}>URL de Foto Avatar (Circular)</label>
-              <input type="text" value={settings.avatarPhotoUrl || ''} onChange={e => setSettings({...settings, avatarPhotoUrl: e.target.value})} placeholder="https://..." style={{width: '100%', padding: '8px', borderRadius: '4px', border: '1px solid var(--border)'}} />
-            </div>
-            
-            <hr style={{margin: '1rem 0', borderColor: 'var(--border)'}} />
-            <h4 style={{fontSize: '1rem'}}>Datos Bancarios</h4>
-            
-            <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem'}}>
-              <div>
-                <label style={{display: 'block', fontSize: '0.85rem', marginBottom: '0.3rem'}}>Banco</label>
-                <input type="text" value={settings.bankName} onChange={e => setSettings({...settings, bankName: e.target.value})} style={{width: '100%', padding: '8px', borderRadius: '4px', border: '1px solid var(--border)'}} />
-              </div>
-              <div>
-                <label style={{display: 'block', fontSize: '0.85rem', marginBottom: '0.3rem'}}>Nro Cuenta</label>
-                <input type="text" value={settings.bankAccount} onChange={e => setSettings({...settings, bankAccount: e.target.value})} style={{width: '100%', padding: '8px', borderRadius: '4px', border: '1px solid var(--border)'}} />
-              </div>
-              <div>
-                <label style={{display: 'block', fontSize: '0.85rem', marginBottom: '0.3rem'}}>Titular</label>
-                <input type="text" value={settings.bankHolder} onChange={e => setSettings({...settings, bankHolder: e.target.value})} style={{width: '100%', padding: '8px', borderRadius: '4px', border: '1px solid var(--border)'}} />
-              </div>
-              <div>
-                <label style={{display: 'block', fontSize: '0.85rem', marginBottom: '0.3rem'}}>C.I. / RUC</label>
-                <input type="text" value={settings.bankDocument} onChange={e => setSettings({...settings, bankDocument: e.target.value})} style={{width: '100%', padding: '8px', borderRadius: '4px', border: '1px solid var(--border)'}} />
-              </div>
-              <div style={{gridColumn: '1 / -1'}}>
-                <label style={{display: 'block', fontSize: '0.85rem', marginBottom: '0.3rem'}}>Alias</label>
-                <input type="text" value={settings.bankAlias || ''} onChange={e => setSettings({...settings, bankAlias: e.target.value})} style={{width: '100%', padding: '8px', borderRadius: '4px', border: '1px solid var(--border)'}} />
-              </div>
-            </div>
-            
-            <button className="btn-primary" onClick={() => saveSettings(settings)} disabled={settingsLoading} style={{marginTop: '1rem'}}>
-              {settingsLoading ? 'Guardando...' : 'Guardar Configuraciones'}
-            </button>
+          <h4 className={styles.cardSectionTitle}>Datos de la Boda</h4>
+          <div className={styles.formGroup}>
+            <label className={styles.label}>Nombres de los Novios</label>
+            <input type="text" className={styles.input} value={settings.coupleNames} onChange={e => setSettings({...settings, coupleNames: e.target.value})} placeholder="Ej: Melissa & Julio" />
           </div>
+          <div className={styles.formGroup}>
+            <label className={styles.label}>URL Foto Portada (Hero)</label>
+            <input type="text" className={styles.input} value={settings.coverPhotoUrl || ''} onChange={e => setSettings({...settings, coverPhotoUrl: e.target.value})} placeholder="https://..." />
+          </div>
+          <div className={styles.formGroup}>
+            <label className={styles.label}>URL Foto Avatar (Circular)</label>
+            <input type="text" className={styles.input} value={settings.avatarPhotoUrl || ''} onChange={e => setSettings({...settings, avatarPhotoUrl: e.target.value})} placeholder="https://..." />
+          </div>
+          
+          <h4 className={styles.cardSectionTitle}>Datos Bancarios</h4>
+          <div className={styles.inputRow}>
+            <div className={styles.formGroup}>
+              <label className={styles.label}>Banco</label>
+              <input type="text" className={styles.input} value={settings.bankName} onChange={e => setSettings({...settings, bankName: e.target.value})} />
+            </div>
+            <div className={styles.formGroup}>
+              <label className={styles.label}>Nro Cuenta</label>
+              <input type="text" className={styles.input} value={settings.bankAccount} onChange={e => setSettings({...settings, bankAccount: e.target.value})} />
+            </div>
+          </div>
+          <div className={styles.inputRow}>
+            <div className={styles.formGroup}>
+              <label className={styles.label}>Titular</label>
+              <input type="text" className={styles.input} value={settings.bankHolder} onChange={e => setSettings({...settings, bankHolder: e.target.value})} />
+            </div>
+            <div className={styles.formGroup}>
+              <label className={styles.label}>C.I. / RUC</label>
+              <input type="text" className={styles.input} value={settings.bankDocument} onChange={e => setSettings({...settings, bankDocument: e.target.value})} />
+            </div>
+          </div>
+          <div className={styles.formGroup}>
+            <label className={styles.label}>Alias</label>
+            <input type="text" className={styles.input} value={settings.bankAlias || ''} onChange={e => setSettings({...settings, bankAlias: e.target.value})} />
+          </div>
+          
+          <button className={`btn-primary ${styles.btnSave}`} onClick={() => saveSettings(settings)} disabled={settingsLoading}>
+            {settingsLoading ? 'Guardando...' : 'Guardar Configuraciones'}
+          </button>
         </div>
 
         {/* Gallery Box */}
-        <div style={{flex: '1', minWidth: '300px', background: 'var(--surface)', padding: '1.5rem', borderRadius: '8px', border: '1px solid var(--border)', boxShadow: 'var(--shadow)'}}>
-          <h3 style={{marginBottom: '1.5rem', fontFamily: 'var(--font-sans)'}}>Galería de Fotos</h3>
-          <div style={{display: 'flex', gap: '0.5rem', marginBottom: '1rem'}}>
-            <input type="text" placeholder="URL de la imagen" value={newGalleryUrl} onChange={e => setNewGalleryUrl(e.target.value)} style={{flex: 1, padding: '8px', borderRadius: '4px', border: '1px solid var(--border)'}} />
-            <button className="btn-primary" onClick={addGalleryImage}>Añadir</button>
+        <div className={styles.card}>
+          <h3 className={styles.cardTitle}>Galería de Fotos</h3>
+          <div className={styles.galleryInputRow}>
+            <input type="text" className={styles.input} placeholder="Pega aquí la URL de la imagen..." value={newGalleryUrl} onChange={e => setNewGalleryUrl(e.target.value)} />
+            <button className="btn-primary" onClick={addGalleryImage} style={{padding: '0 1.5rem'}}>Añadir</button>
           </div>
-          <div style={{display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.5rem'}}>
+          
+          <div className={styles.galleryGrid}>
             {galleryArray.map((img, index) => (
-              <div key={index} style={{position: 'relative', paddingTop: '100%', backgroundColor: 'var(--border)', borderRadius: '4px', overflow: 'hidden'}}>
-                <img src={img} alt={`Gallery ${index}`} style={{position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover'}} />
-                <button onClick={() => removeGalleryImage(index)} style={{position: 'absolute', top: '5px', right: '5px', background: '#e53935', color: 'white', border: 'none', borderRadius: '50%', width: '20px', height: '20px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '10px'}}>X</button>
+              <div key={index} className={styles.galleryItem}>
+                <img src={img} alt={`Gallery ${index}`} />
+                <div className={styles.galleryOverlay}>
+                  <button onClick={() => removeGalleryImage(index)} className={styles.btnDeleteIcon} title="Eliminar foto">✕</button>
+                </div>
               </div>
             ))}
-            {galleryArray.length === 0 && <p style={{gridColumn: '1/-1', color: 'var(--text-muted)', fontSize: '0.85rem'}}>No hay fotos en la galería.</p>}
+            {galleryArray.length === 0 && (
+              <p style={{gridColumn: '1/-1', color: 'var(--text-muted)', fontSize: '0.9rem', textAlign: 'center', padding: '2rem 0'}}>
+                No hay fotos en la galería. ¡Añade algunas!
+              </p>
+            )}
           </div>
         </div>
 
       </div>
 
-      <div className={styles.actions}>
-        <div className={styles.uploadSection}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-            <h3 style={{ margin: 0 }}>Carga Masiva (CSV)</h3>
-            <button onClick={downloadTemplate} className={styles.actionBtn} style={{ fontSize: '0.9rem', marginBottom: 0 }}>
-              Descargar Plantilla
-            </button>
-          </div>
-          <p style={{fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: '1rem'}}>
-            El archivo CSV debe contener las columnas: <code>title, description, image_url, price</code>
-          </p>
-          <input 
-            type="file" 
-            accept=".csv" 
-            onChange={handleFileUpload} 
-            className={styles.fileInput}
-            disabled={loading}
-          />
-          {loading && <span style={{fontSize: '0.85rem'}}>Procesando...</span>}
+      <div className={styles.uploadSection}>
+        <div className={styles.uploadHeader}>
+          <h3 className={styles.cardTitle} style={{margin: 0}}>Carga Masiva (CSV)</h3>
+          <button onClick={downloadTemplate} className={styles.btnOutline}>
+            Descargar Plantilla
+          </button>
         </div>
+        <p>El archivo CSV debe contener las columnas: <code>title, description, image_url, price</code></p>
+        <input 
+          type="file" 
+          accept=".csv" 
+          onChange={handleFileUpload} 
+          className={styles.fileInput}
+          disabled={loading}
+        />
+        {loading && <span style={{fontSize: '0.9rem', color: 'var(--primary)'}}>Procesando y cargando regalos...</span>}
       </div>
 
       <div className={styles.tableContainer}>
@@ -299,7 +302,7 @@ export default function AdminClient({ initialGifts, initialSettings }: { initial
               <th>Regalo</th>
               <th>Precio</th>
               <th>Estado</th>
-              <th>Referencia Transferencia</th>
+              <th>Ref. Transferencia</th>
               <th>Acciones</th>
             </tr>
           </thead>
@@ -307,9 +310,16 @@ export default function AdminClient({ initialGifts, initialSettings }: { initial
             {gifts.map(gift => (
               <tr key={gift.id}>
                 <td>
-                  <strong>{gift.title}</strong>
+                  <div className={styles.giftTitleCell}>
+                    {gift.image_url ? (
+                      <img src={gift.image_url} alt={gift.title} className={styles.tableThumbnail} />
+                    ) : (
+                      <div className={styles.tableThumbnail}></div>
+                    )}
+                    <span className={styles.giftTitle}>{gift.title}</span>
+                  </div>
                 </td>
-                <td>{formatPrice(gift.price)}</td>
+                <td style={{fontWeight: 500}}>{formatPrice(gift.price)}</td>
                 <td>
                   <span className={`${styles.statusBadge} ${styles[`status-${gift.status}`]}`}>
                     {translateStatus(gift.status)}
@@ -317,31 +327,33 @@ export default function AdminClient({ initialGifts, initialSettings }: { initial
                 </td>
                 <td>
                   {gift.transfer_reference ? (
-                    <code style={{background: 'var(--border)', color: 'var(--foreground)', padding: '2px 6px', borderRadius: '4px'}}>
-                      {gift.transfer_reference}
-                    </code>
-                  ) : '-'}
+                    <span className={styles.referenceCode}>{gift.transfer_reference}</span>
+                  ) : <span style={{color: 'var(--border)'}}>—</span>}
                 </td>
                 <td>
-                  {gift.status === 'PENDING_CONFIRMATION' && (
-                    <button className={styles.actionBtn} onClick={() => updateStatus(gift.id, 'GIFTED')}>
-                      Aprobar
+                  <div className={styles.actionsCell}>
+                    {gift.status === 'PENDING_CONFIRMATION' && (
+                      <button className={styles.actionPill} onClick={() => updateStatus(gift.id, 'GIFTED')}>
+                        Aprobar
+                      </button>
+                    )}
+                    {gift.status !== 'AVAILABLE' && (
+                      <button className={styles.actionPill} onClick={() => updateStatus(gift.id, 'AVAILABLE')}>
+                        Liberar
+                      </button>
+                    )}
+                    <button className={`${styles.actionPill} ${styles.danger}`} onClick={() => deleteGift(gift.id)}>
+                      Eliminar
                     </button>
-                  )}
-                  {gift.status !== 'AVAILABLE' && (
-                    <button className={styles.actionBtn} onClick={() => updateStatus(gift.id, 'AVAILABLE')}>
-                      Liberar
-                    </button>
-                  )}
-                  <button className={`${styles.actionBtn} ${styles.danger}`} onClick={() => deleteGift(gift.id)}>
-                    Eliminar
-                  </button>
+                  </div>
                 </td>
               </tr>
             ))}
             {gifts.length === 0 && (
               <tr>
-                <td colSpan={5} style={{textAlign: 'center', color: 'var(--text-muted)'}}>No hay regalos registrados</td>
+                <td colSpan={5} style={{textAlign: 'center', color: 'var(--text-muted)', padding: '3rem'}}>
+                  No hay regalos registrados aún. Usa la carga masiva CSV para agregar algunos.
+                </td>
               </tr>
             )}
           </tbody>

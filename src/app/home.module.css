@@ -3,7 +3,8 @@
   position: relative;
   background-color: var(--surface);
   margin-bottom: 0;
-  height: 100vh;
+  min-height: 100vh;
+  min-height: 100dvh;
   display: flex;
   flex-direction: column;
   justify-content: center;

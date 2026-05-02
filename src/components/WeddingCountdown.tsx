@@ -46,6 +46,14 @@ export default function WeddingCountdown({ weddingDate, coupleNames }: Props) {
     );
   }
 
+  if (!weddingDate) {
+    return (
+      <section className={styles.countdownSection}>
+        <p className={styles.countdownLabel}>La fecha de la boda aún no ha sido configurada</p>
+      </section>
+    );
+  }
+
   const pad = (n: number) => String(n).padStart(2, '0');
 
   return (

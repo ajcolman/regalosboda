@@ -51,6 +51,7 @@ export async function PATCH(request: Request) {
         galleryImages: body.galleryImages !== undefined 
           ? (typeof body.galleryImages === 'string' ? body.galleryImages : JSON.stringify(body.galleryImages)) 
           : settings.galleryImages,
+        weddingDate: body.weddingDate !== undefined ? body.weddingDate : settings.weddingDate,
       }
     });
 

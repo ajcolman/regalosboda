@@ -65,9 +65,7 @@ export default async function Home() {
         </div>
       </section>
 
-      {settings.weddingDate && (
-        <WeddingCountdown weddingDate={settings.weddingDate} coupleNames={settings.coupleNames} />
-      )}
+      <WeddingCountdown weddingDate={settings.weddingDate || ''} coupleNames={settings.coupleNames} />
 
       <div className="container">
         

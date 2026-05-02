@@ -2,13 +2,13 @@
   text-align: center;
   position: relative;
   background-color: var(--surface);
-  margin-bottom: 4rem;
+  margin-bottom: 0;
   height: 100vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  overflow: hidden;
+  overflow: clip;
 }
 
 .scrollDown {

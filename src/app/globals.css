@@ -26,7 +26,7 @@
   }
 }
 
-/* Reset base universal */
+/* Reset universal limpio */
 * {
   box-sizing: border-box;
   padding: 0;
@@ -35,6 +35,7 @@
 
 html {
   scroll-behavior: smooth;
+  /* Sin alturas fijas ni overflows */
 }
 
 body {
@@ -44,14 +45,14 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   line-height: 1.5;
-  /* Evitamos overflow-x aquí para no romper el scroll nativo */
+  min-height: 100vh;
+  min-height: 100dvh;
 }
 
-/* Envolvemos el contenido principal para evitar desbordamientos laterales si es necesario */
+/* El elemento main no debe restringir el scroll */
 main {
-  overflow-x: hidden;
-  width: 100%;
   display: block;
+  width: 100%;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -93,7 +94,7 @@ input {
   text-transform: uppercase;
   letter-spacing: 1px;
   position: relative;
-  overflow: hidden;
+  overflow: hidden; /* Aquí sí, para el efecto ripple */
 }
 
 @media (prefers-color-scheme: dark) {

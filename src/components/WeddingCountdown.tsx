@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import styles from '../app/home.module.css';
 
 interface Props {
-  weddingDate: string; // ISO e.g. "2025-11-15T18:00:00"
+  weddingDate: string;
   coupleNames: string;
 }
 
@@ -17,6 +17,7 @@ interface TimeLeft {
 }
 
 function calculate(target: string): TimeLeft {
+  if (!target) return { days: 0, hours: 0, minutes: 0, seconds: 0, isPast: false };
   const diff = new Date(target).getTime() - Date.now();
   if (diff <= 0) return { days: 0, hours: 0, minutes: 0, seconds: 0, isPast: true };
   return {
@@ -28,20 +29,28 @@ function calculate(target: string): TimeLeft {
   };
 }
 
+const pad = (n: number) => String(n).padStart(2, '0');
+
 export default function WeddingCountdown({ weddingDate, coupleNames }: Props) {
-  const [time, setTime] = useState<TimeLeft>(calculate(weddingDate));
+  // mounted evita la hidratación: el servidor siempre renderiza el placeholder
+  const [mounted, setMounted] = useState(false);
+  const [time, setTime] = useState<TimeLeft>({ days: 0, hours: 0, minutes: 0, seconds: 0, isPast: false });
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setTime(calculate(weddingDate));
-    }, 1000);
+    setMounted(true);
+    setTime(calculate(weddingDate));
+    if (!weddingDate) return;
+    const interval = setInterval(() => setTime(calculate(weddingDate)), 1000);
     return () => clearInterval(interval);
   }, [weddingDate]);
 
-  if (time.isPast) {
+  // Placeholder idéntico en servidor y cliente (antes del mount) → sin mismatch
+  if (!mounted) {
     return (
       <section className={styles.countdownSection}>
-        <p className={styles.countdownPast}>¡El gran día ha llegado! 🎊</p>
+        <p className={styles.countdownLabel}>
+          {weddingDate ? 'Faltan para nuestra boda' : 'La fecha de la boda aún no ha sido configurada'}
+        </p>
       </section>
     );
   }
@@ -54,7 +63,13 @@ export default function WeddingCountdown({ weddingDate, coupleNames }: Props) {
     );
   }
 
-  const pad = (n: number) => String(n).padStart(2, '0');
+  if (time.isPast) {
+    return (
+      <section className={styles.countdownSection}>
+        <p className={styles.countdownPast}>¡El gran día ha llegado! 🎊</p>
+      </section>
+    );
+  }
 
   return (
     <section className={styles.countdownSection}>

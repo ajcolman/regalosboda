@@ -236,6 +236,10 @@ export default function AdminClient({ initialGifts, initialSettings }: { initial
     }
   };
 
+  const totalValue = gifts.reduce((acc, gift) => acc + gift.price, 0);
+  const receivedValue = gifts.filter(g => g.status === 'GIFTED').reduce((acc, gift) => acc + gift.price, 0);
+  const pendingValue = gifts.filter(g => g.status === 'PENDING_CONFIRMATION').reduce((acc, gift) => acc + gift.price, 0);
+
   return (
     <div className={styles.container}>
       <header className={styles.header}>
@@ -247,6 +251,21 @@ export default function AdminClient({ initialGifts, initialSettings }: { initial
           Cerrar Sesión
         </button>
       </header>
+
+      <div className={styles.statsGrid}>
+        <div className={styles.statCard}>
+          <div className={styles.statValue}>{formatPrice(totalValue)}</div>
+          <div className={styles.statLabel}>Valor Total Lista</div>
+        </div>
+        <div className={styles.statCard}>
+          <div className={styles.statValue}>{formatPrice(receivedValue)}</div>
+          <div className={styles.statLabel}>Total Recibido</div>
+        </div>
+        <div className={styles.statCard}>
+          <div className={styles.statValue} style={{color: '#ffa726'}}>{formatPrice(pendingValue)}</div>
+          <div className={styles.statLabel}>Por Confirmar</div>
+        </div>
+      </div>
 
       <div className={styles.dashboardGrid}>
         

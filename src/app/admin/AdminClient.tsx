@@ -25,6 +25,7 @@ interface Settings {
   bankDocument: string;
   bankAlias: string;
   galleryImages: string | null;
+  weddingDate: string | null;
 }
 
 export default function AdminClient({ initialGifts, initialSettings }: { initialGifts: Gift[], initialSettings: Settings }) {
@@ -285,6 +286,15 @@ export default function AdminClient({ initialGifts, initialSettings }: { initial
           <div className={styles.formGroup}>
             <label className={styles.label}>URL Foto Avatar (Circular)</label>
             <input type="text" className={styles.input} value={settings.avatarPhotoUrl || ''} onChange={e => setSettings({...settings, avatarPhotoUrl: e.target.value})} placeholder="https://..." />
+          </div>
+          <div className={styles.formGroup}>
+            <label className={styles.label}>Fecha de la Boda</label>
+            <input
+              type="datetime-local"
+              className={styles.input}
+              value={settings.weddingDate || ''}
+              onChange={e => setSettings({...settings, weddingDate: e.target.value})}
+            />
           </div>
           
           <h4 className={styles.cardSectionTitle}>Datos Bancarios</h4>

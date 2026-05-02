@@ -33,4 +33,5 @@ model Settings {
   bankDocument    String  @default("0.000.000")
   bankAlias       String  @default("")
   galleryImages   String? // Can store a JSON array of strings: '["url1", "url2"]'
+  weddingDate     String? // ISO date string e.g. "2025-11-15"
 }

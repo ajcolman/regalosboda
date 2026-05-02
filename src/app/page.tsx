@@ -3,6 +3,7 @@ import { prisma } from '@/lib/prisma';
 import styles from './home.module.css';
 import GalleryClient from './GalleryClient';
 import ScrollReveal from '@/components/ScrollReveal';
+import WeddingCountdown from '@/components/WeddingCountdown';
 
 export const revalidate = 0;
 
@@ -63,6 +64,10 @@ export default async function Home() {
           </svg>
         </div>
       </section>
+
+      {settings.weddingDate && (
+        <WeddingCountdown weddingDate={settings.weddingDate} coupleNames={settings.coupleNames} />
+      )}
 
       <div className="container">
         

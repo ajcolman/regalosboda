@@ -81,6 +81,8 @@ export default function AdminClient({ initialGifts, initialSettings }: { initial
             description: row.descripcion || row.description || '',
             image_url: row.imagen || row.image_url || '',
             price: row.precio || row.price || 0,
+            stock: row.stock ? parseInt(row.stock) : 1,
+            isVisible: row.visible !== undefined ? (row.visible.toLowerCase() === 'si' || row.visible.toLowerCase() === 'true') : true,
           }));
 
           const res = await fetch('/api/gifts/bulk', {
@@ -240,7 +242,7 @@ export default function AdminClient({ initialGifts, initialSettings }: { initial
   };
 
   const downloadTemplate = () => {
-    const csvContent = "title,description,price,image_url\nRegalo Ejemplo,Descripción del regalo,150000,https://ejemplo.com/imagen.jpg";
+    const csvContent = "title,description,price,image_url,stock,visible\nRegalo Ejemplo,Descripción del regalo,150000,https://ejemplo.com/imagen.jpg,1,si";
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
@@ -390,7 +392,7 @@ export default function AdminClient({ initialGifts, initialSettings }: { initial
             Descargar Plantilla CSV
           </button>
         </div>
-        <p>También puedes cargar masivamente usando un archivo CSV (columnas: <code>title, description, image_url, price</code>)</p>
+        <p>También puedes cargar masivamente usando un archivo CSV (columnas: <code>title, description, image_url, price, stock, visible</code>)</p>
         <input 
           type="file" 
           accept=".csv" 

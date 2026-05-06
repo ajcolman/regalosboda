@@ -12,6 +12,7 @@ interface Gift {
   price: number;
   status: string;
   timesPending: number;
+  transfer_reference: string | null;
 }
 
 interface Settings {

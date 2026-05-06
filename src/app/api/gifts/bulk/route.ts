@@ -17,6 +17,8 @@ export async function POST(request: Request) {
             description: gift.description || null,
             image_url: gift.image_url || null,
             price: parseFloat(gift.price),
+            stock: gift.stock !== undefined ? parseInt(gift.stock) : 1,
+            isVisible: gift.isVisible !== undefined ? gift.isVisible : true,
           }
         });
       })

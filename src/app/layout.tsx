@@ -1,21 +1,24 @@
 import type { Metadata } from "next";
-import { Inter, Playfair_Display, Great_Vibes } from "next/font/google";
+import { Nunito, Lora, Great_Vibes } from "next/font/google";
 import "./globals.css";
 
-const inter = Inter({
+const nunito = Nunito({
   variable: "--font-sans",
   subsets: ["latin"],
+  display: "swap",
 });
 
-const playfair = Playfair_Display({
+const lora = Lora({
   variable: "--font-serif",
   subsets: ["latin"],
+  display: "swap",
 });
 
 const greatVibes = Great_Vibes({
   weight: "400",
   variable: "--font-script",
   subsets: ["latin"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -29,8 +32,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="es" className={`${inter.variable} ${playfair.variable} ${greatVibes.variable}`}>
-      <body>{children}</body>
+    <html lang="es" className={`${nunito.variable} ${lora.variable} ${greatVibes.variable}`}>
+      <body suppressHydrationWarning>{children}</body>
     </html>
   );
 }

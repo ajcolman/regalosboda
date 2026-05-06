@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { prisma } from '@/lib/prisma';
 import styles from './home.module.css';
 import GalleryClient from './GalleryClient';
+import GiftGrid from './GiftGrid';
 import ScrollReveal from '@/components/ScrollReveal';
 import WeddingCountdown from '@/components/WeddingCountdown';
 
@@ -32,17 +33,16 @@ export default async function Home() {
     console.error('Failed to parse gallery array', e);
   }
 
-  const formatPrice = (price: number) => {
-    return new Intl.NumberFormat('es-PY', { style: 'currency', currency: 'PYG', minimumFractionDigits: 0 }).format(price);
-  };
+  const visibleGifts = gifts.filter(g => g.isVisible);
 
   return (
     <main>
+      {/* ── Hero ── */}
       <section className={styles.hero}>
         {settings.coverPhotoUrl && (
           <>
             <img src={settings.coverPhotoUrl} alt="Portada" className={styles.heroBackground} />
-            <div className={styles.heroOverlay}></div>
+            <div className={styles.heroOverlay} />
           </>
         )}
         <div className={styles.heroContent}>
@@ -52,12 +52,12 @@ export default async function Home() {
             </div>
           )}
           <h1 className={styles.heroTitle}>{settings.coupleNames}</h1>
+          <div className={styles.heroDivider} />
           <p className={styles.heroSubtitle}>
             Nuestra mayor alegría es compartir este día con ustedes.
-            Si desean tener un detalle adicional, hemos preparado esta lista con mucho amor.
+            Si desean tenernos un detalle, hemos preparado esta lista con mucho amor.
           </p>
         </div>
-        
         <div className={styles.scrollDown}>
           <svg viewBox="0 0 24 24">
             <path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/>
@@ -65,105 +65,59 @@ export default async function Home() {
         </div>
       </section>
 
+      {/* ── Countdown ── */}
       <WeddingCountdown weddingDate={settings.weddingDate || ''} coupleNames={settings.coupleNames} />
 
       <div className="container">
-        
-        {/* Gallery Section */}
+
+        {/* ── Gallery ── */}
         {galleryArray.length > 0 && (
           <ScrollReveal>
-            <section>
+            <section className={styles.gallerySection}>
               <h2 className={styles.sectionTitle}>Nuestra Historia</h2>
+              <p className={styles.sectionSubtitle}>Momentos que atesoran nuestra historia juntos</p>
               <GalleryClient images={galleryArray} />
             </section>
           </ScrollReveal>
         )}
 
+        {/* ── How it works ── */}
         <ScrollReveal delay={100}>
           <section className={styles.instructionsSection}>
             <h2 className={styles.sectionTitle}>¿Cómo funciona?</h2>
+            <p className={styles.sectionSubtitle}>Tres simples pasos para hacernos llegar tu regalo</p>
             <div className={styles.stepsGrid}>
-            <div className={styles.stepCard}>
-              <div className={styles.stepNumber}>1</div>
-              <h3>Elige un Regalo</h3>
-              <p>Explora nuestra lista de regalos a continuación y selecciona el detalle que más te guste dándole clic a "Regalar".</p>
+              <div className={styles.stepCard}>
+                <div className={styles.stepNumber}>1</div>
+                <h3>Elige un Regalo</h3>
+                <p>Explora nuestra lista y selecciona el detalle que más te guste. Dale clic al botón "Regalar".</p>
+              </div>
+              <div className={styles.stepCard}>
+                <div className={styles.stepNumber}>2</div>
+                <h3>Transfiere el Monto</h3>
+                <p>Realiza una transferencia bancaria a la cuenta indicada por el monto del regalo elegido.</p>
+              </div>
+              <div className={styles.stepCard}>
+                <div className={styles.stepNumber}>3</div>
+                <h3>Confirma tu Regalo</h3>
+                <p>Ingresa tu nombre y el número de comprobante para que podamos agradecerte personalmente.</p>
+              </div>
             </div>
-            <div className={styles.stepCard}>
-              <div className={styles.stepNumber}>2</div>
-              <h3>Transfiere el Monto</h3>
-              <p>Realiza una transferencia bancaria a la cuenta de los novios por el valor del regalo seleccionado.</p>
-            </div>
-            <div className={styles.stepCard}>
-              <div className={styles.stepNumber}>3</div>
-              <h3>Confirma tu Regalo</h3>
-              <p>Ingresa tu nombre y el número de comprobante de transferencia en la plataforma para que podamos agradecerte.</p>
-            </div>
-          </div>
-        </section>
+          </section>
         </ScrollReveal>
 
-        <section id="regalos">
+        {/* ── Gift List ── */}
+        <section id="regalos" className={styles.giftsSection}>
           <ScrollReveal delay={50}>
             <h2 className={styles.sectionTitle}>Lista de Regalos</h2>
+            <p className={styles.sectionSubtitle}>
+              Cada detalle, por pequeño que sea, llena nuestro corazón de gratitud
+            </p>
           </ScrollReveal>
-          <div className={styles.grid}>
-            {gifts
-              .filter(gift => gift.isVisible)
-              .map((gift) => {
-                const isAvailable = (gift.timesGifted + gift.timesPending) < gift.stock;
-                
-                let statusText = 'Disponible';
-                let statusClass = styles.statusAvailable;
-                
-                if (gift.timesGifted >= gift.stock) {
-                  statusText = 'Regalado';
-                  statusClass = styles.statusGifted;
-                } else if (gift.timesGifted + gift.timesPending >= gift.stock) {
-                  statusText = 'Reservado';
-                  statusClass = styles.statusPending;
-                }
-
-                return (
-                  <ScrollReveal key={gift.id} delay={60}>
-                    <div className={`${styles.card} ${!isAvailable ? styles.cardGifted : ''}`}>
-                    <div className={styles.cardImageContainer}>
-                      <div className={`${styles.statusBadge} ${statusClass}`}>
-                        {statusText}
-                      </div>
-                      {gift.image_url ? (
-                        <img src={gift.image_url} alt={gift.title} className={styles.cardImage} />
-                      ) : (
-                        <div style={{ width: '100%', height: '100%', backgroundColor: '#eee' }}></div>
-                      )}
-                    </div>
-                    <div className={styles.cardContent}>
-                      <h3 className={styles.cardTitle}>{gift.title}</h3>
-                      <div className={styles.cardPrice}>{formatPrice(gift.price)}</div>
-                      {gift.description && <p className={styles.cardDescription}>{gift.description}</p>}
-                      
-                      {isAvailable ? (
-                        <Link href={`/gift/${gift.id}`} className={`btn-primary ${styles.btnGift}`}>
-                          Regalar
-                        </Link>
-                      ) : (
-                        <button className={`btn-primary ${styles.btnGift}`} disabled style={{opacity: 0.7}}>
-                          {statusText === 'Regalado' ? 'Completado' : 'No Disponible'}
-                        </button>
-                      )}
-                    </div>
-                    </div>
-                  </ScrollReveal>
-                );
-              })}
-            
-            {gifts.filter(g => g.isVisible).length === 0 && (
-              <p style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '4rem 0', color: '#666' }}>
-                No hay regalos en la lista todavía.
-              </p>
-            )}
-          </div>
+          <GiftGrid gifts={visibleGifts} />
         </section>
 
+        {/* ── Thanks ── */}
         <ScrollReveal delay={100}>
           <section className={styles.thanksSection}>
             <div className={styles.thanksCard}>

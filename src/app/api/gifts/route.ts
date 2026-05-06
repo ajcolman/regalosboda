@@ -15,8 +15,7 @@ export async function GET() {
 
 export async function POST(request: Request) {
   try {
-    const body = await request.json();
-    const { title, description, image_url, price } = body;
+    const { title, description, image_url, price, stock, isVisible } = body;
 
     if (!title || price === undefined) {
       return NextResponse.json({ error: 'Title and price are required' }, { status: 400 });
@@ -28,6 +27,8 @@ export async function POST(request: Request) {
         description,
         image_url,
         price: parseFloat(price),
+        stock: stock !== undefined ? parseInt(stock) : 1,
+        isVisible: isVisible !== undefined ? isVisible : true,
       },
     });
 

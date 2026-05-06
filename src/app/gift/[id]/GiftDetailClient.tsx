@@ -11,6 +11,7 @@ interface Gift {
   image_url: string | null;
   price: number;
   status: string;
+  timesPending: number;
 }
 
 interface Settings {
@@ -42,12 +43,28 @@ export default function GiftDetailClient({ gift, settings }: { gift: Gift, setti
     setError('');
 
     try {
+      // 1. Validar si el comprobante ya existe
+      const checkRes = await fetch(`/api/gifts/validate-ref?ref=${encodeURIComponent(reference)}`);
+      const { exists } = await checkRes.json();
+      
+      if (exists) {
+        setError('Este número de comprobante ya ha sido utilizado para otro regalo. Por favor, verifica los datos.');
+        setLoading(false);
+        return;
+      }
+
+      // 2. Proceder con la confirmación
+      const newReference = gift.transfer_reference 
+        ? `${gift.transfer_reference} | [${guestName}] ${reference}`
+        : `[${guestName}] ${reference}`;
+
       const res = await fetch(`/api/gifts/${gift.id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           status: 'PENDING_CONFIRMATION',
-          transfer_reference: `[${guestName}] ${reference}`
+          timesPending: gift.timesPending + 1,
+          transfer_reference: newReference
         })
       });
 

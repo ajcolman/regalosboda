@@ -20,9 +20,16 @@ export async function PATCH(request: Request, context: { params: Promise<{ id: s
     const params = await context.params;
     const body = await request.json();
     
+    // Parse numeric fields if they exist
+    const updateData: any = { ...body };
+    if (body.price !== undefined) updateData.price = parseFloat(body.price);
+    if (body.stock !== undefined) updateData.stock = parseInt(body.stock);
+    if (body.timesGifted !== undefined) updateData.timesGifted = parseInt(body.timesGifted);
+    if (body.timesPending !== undefined) updateData.timesPending = parseInt(body.timesPending);
+    
     const gift = await prisma.gift.update({
       where: { id: params.id },
-      data: body,
+      data: updateData,
     });
     
     return NextResponse.json(gift);

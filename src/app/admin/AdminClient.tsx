@@ -11,6 +11,10 @@ interface Gift {
   image_url: string | null;
   price: number;
   status: string;
+  stock: number;
+  timesGifted: number;
+  timesPending: number;
+  isVisible: boolean;
   transfer_reference: string | null;
 }
 
@@ -101,15 +105,34 @@ export default function AdminClient({ initialGifts, initialSettings }: { initial
   };
 
   const updateStatus = async (id: string, newStatus: string) => {
-    if (!confirm(`¿Seguro que deseas marcar como ${newStatus}?`)) return;
+    if (!confirm(`¿Seguro que deseas realizar esta acción?`)) return;
+    
+    const gift = gifts.find(g => g.id === id);
+    if (!gift) return;
+
+    let updates: any = { status: newStatus };
+    
+    // Lógica de contadores basada en la acción
+    if (newStatus === 'GIFTED' && gift.status === 'PENDING_CONFIRMATION') {
+      updates.timesGifted = gift.timesGifted + 1;
+      updates.timesPending = Math.max(0, gift.timesPending - 1);
+    } else if (newStatus === 'AVAILABLE') {
+      if (gift.status === 'GIFTED') {
+        updates.timesGifted = Math.max(0, gift.timesGifted - 1);
+      } else if (gift.status === 'PENDING_CONFIRMATION') {
+        updates.timesPending = Math.max(0, gift.timesPending - 1);
+      }
+    }
+
     try {
       const res = await fetch(`/api/gifts/${id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ status: newStatus }),
+        body: JSON.stringify(updates),
       });
       if (res.ok) {
-        setGifts(gifts.map(g => g.id === id ? { ...g, status: newStatus } : g));
+        const updatedGift = await res.json();
+        setGifts(gifts.map(g => g.id === id ? updatedGift : g));
       }
     } catch (e) {
       alert('Error al actualizar estado');
@@ -151,7 +174,7 @@ export default function AdminClient({ initialGifts, initialSettings }: { initial
   };
 
   const openNewGiftModal = () => {
-    setEditingGift({ title: '', description: '', price: 0, image_url: '' });
+    setEditingGift({ title: '', description: '', price: 0, image_url: '', stock: 1, isVisible: true });
     setIsModalOpen(true);
   };
 
@@ -237,9 +260,9 @@ export default function AdminClient({ initialGifts, initialSettings }: { initial
     }
   };
 
-  const totalValue = gifts.reduce((acc, gift) => acc + gift.price, 0);
-  const receivedValue = gifts.filter(g => g.status === 'GIFTED').reduce((acc, gift) => acc + gift.price, 0);
-  const pendingValue = gifts.filter(g => g.status === 'PENDING_CONFIRMATION').reduce((acc, gift) => acc + gift.price, 0);
+  const totalValue = gifts.reduce((acc, gift) => acc + (gift.price * gift.stock), 0);
+  const receivedValue = gifts.reduce((acc, gift) => acc + (gift.price * gift.timesGifted), 0);
+  const pendingValue = gifts.reduce((acc, gift) => acc + (gift.price * gift.timesPending), 0);
 
   return (
     <div className={styles.container}>
@@ -384,6 +407,9 @@ export default function AdminClient({ initialGifts, initialSettings }: { initial
             <tr>
               <th>Regalo</th>
               <th>Precio</th>
+              <th>Stock</th>
+              <th>Recibido</th>
+              <th>Visible</th>
               <th>Estado</th>
               <th>Ref. Transferencia</th>
               <th>Acciones</th>
@@ -403,6 +429,13 @@ export default function AdminClient({ initialGifts, initialSettings }: { initial
                   </div>
                 </td>
                 <td style={{fontWeight: 500}}>{formatPrice(gift.price)}</td>
+                <td style={{textAlign: 'center'}}>{gift.stock}</td>
+                <td style={{textAlign: 'center'}}>{gift.timesGifted} / {gift.stock}</td>
+                <td style={{textAlign: 'center'}}>
+                  <span style={{ color: gift.isVisible ? '#4caf50' : '#f44336', fontWeight: 'bold' }}>
+                    {gift.isVisible ? 'SÍ' : 'NO'}
+                  </span>
+                </td>
                 <td>
                   <span className={`${styles.statusBadge} ${styles[`status-${gift.status}`]}`}>
                     {translateStatus(gift.status)}
@@ -463,6 +496,30 @@ export default function AdminClient({ initialGifts, initialSettings }: { initial
                 <div className={styles.formGroup}>
                   <label className={styles.label}>Precio (GS.) *</label>
                   <input type="number" className={styles.input} required value={editingGift.price || ''} onChange={e => setEditingGift({...editingGift, price: Number(e.target.value)})} />
+                </div>
+                <div className={styles.inputRow}>
+                  <div className={styles.formGroup}>
+                    <label className={styles.label}>Stock Disponible *</label>
+                    <input type="number" className={styles.input} required min="1" value={editingGift.stock || 1} onChange={e => setEditingGift({...editingGift, stock: Number(e.target.value)})} />
+                  </div>
+                  <div className={styles.formGroup}>
+                    <label className={styles.label}>Visible en Landing</label>
+                    <select className={styles.input} value={editingGift.isVisible ? 'true' : 'false'} onChange={e => setEditingGift({...editingGift, isVisible: e.target.value === 'true'})}>
+                      <option value="true">SÍ</option>
+                      <option value="false">NO (Ocultar)</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div className={styles.inputRow}>
+                  <div className={styles.formGroup}>
+                    <label className={styles.label}>Regalados (Confirmados)</label>
+                    <input type="number" className={styles.input} min="0" value={editingGift.timesGifted || 0} onChange={e => setEditingGift({...editingGift, timesGifted: Number(e.target.value)})} />
+                  </div>
+                  <div className={styles.formGroup}>
+                    <label className={styles.label}>Pendientes de Confirmar</label>
+                    <input type="number" className={styles.input} min="0" value={editingGift.timesPending || 0} onChange={e => setEditingGift({...editingGift, timesPending: Number(e.target.value)})} />
+                  </div>
                 </div>
                 <div className={styles.formGroup}>
                   <label className={styles.label}>URL de la Imagen</label>

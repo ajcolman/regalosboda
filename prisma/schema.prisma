@@ -16,7 +16,11 @@ model Gift {
   description        String?
   image_url          String?
   price              Float
-  status             String   @default("AVAILABLE") // AVAILABLE, PENDING_CONFIRMATION, GIFTED
+  status             String   @default("AVAILABLE") // Mantendremos esto por compatibilidad, pero la lógica real usará el stock
+  stock              Int      @default(1)
+  timesGifted        Int      @default(0)
+  timesPending       Int      @default(0)
+  isVisible          Boolean  @default(true)
   transfer_reference String?
   createdAt          DateTime @default(now())
   updatedAt          DateTime @updatedAt

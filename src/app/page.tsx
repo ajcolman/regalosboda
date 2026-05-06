@@ -107,54 +107,56 @@ export default async function Home() {
             <h2 className={styles.sectionTitle}>Lista de Regalos</h2>
           </ScrollReveal>
           <div className={styles.grid}>
-            {gifts.map((gift) => {
-              const isAvailable = gift.status === 'AVAILABLE';
-              const statusClass = gift.status === 'AVAILABLE' 
-                ? styles.statusAvailable 
-                : gift.status === 'PENDING_CONFIRMATION' 
-                  ? styles.statusPending 
-                  : styles.statusGifted;
-                  
-              const statusText = gift.status === 'AVAILABLE' 
-                ? 'Disponible' 
-                : gift.status === 'PENDING_CONFIRMATION' 
-                  ? 'Reservado' 
-                  : 'Regalado';
+            {gifts
+              .filter(gift => gift.isVisible)
+              .map((gift) => {
+                const isAvailable = (gift.timesGifted + gift.timesPending) < gift.stock;
+                
+                let statusText = 'Disponible';
+                let statusClass = styles.statusAvailable;
+                
+                if (gift.timesGifted >= gift.stock) {
+                  statusText = 'Regalado';
+                  statusClass = styles.statusGifted;
+                } else if (gift.timesGifted + gift.timesPending >= gift.stock) {
+                  statusText = 'Reservado';
+                  statusClass = styles.statusPending;
+                }
 
-              return (
-                <ScrollReveal key={gift.id} delay={gifts.indexOf(gift) * 60}>
-                  <div className={`${styles.card} ${!isAvailable ? styles.cardGifted : ''}`}>
-                  <div className={styles.cardImageContainer}>
-                    <div className={`${styles.statusBadge} ${statusClass}`}>
-                      {statusText}
+                return (
+                  <ScrollReveal key={gift.id} delay={60}>
+                    <div className={`${styles.card} ${!isAvailable ? styles.cardGifted : ''}`}>
+                    <div className={styles.cardImageContainer}>
+                      <div className={`${styles.statusBadge} ${statusClass}`}>
+                        {statusText}
+                      </div>
+                      {gift.image_url ? (
+                        <img src={gift.image_url} alt={gift.title} className={styles.cardImage} />
+                      ) : (
+                        <div style={{ width: '100%', height: '100%', backgroundColor: '#eee' }}></div>
+                      )}
                     </div>
-                    {gift.image_url ? (
-                      <img src={gift.image_url} alt={gift.title} className={styles.cardImage} />
-                    ) : (
-                      <div style={{ width: '100%', height: '100%', backgroundColor: '#eee' }}></div>
-                    )}
-                  </div>
-                  <div className={styles.cardContent}>
-                    <h3 className={styles.cardTitle}>{gift.title}</h3>
-                    <div className={styles.cardPrice}>{formatPrice(gift.price)}</div>
-                    {gift.description && <p className={styles.cardDescription}>{gift.description}</p>}
-                    
-                    {isAvailable ? (
-                      <Link href={`/gift/${gift.id}`} className={`btn-primary ${styles.btnGift}`}>
-                        Regalar
-                      </Link>
-                    ) : (
-                      <button className={`btn-primary ${styles.btnGift}`} disabled>
-                        No Disponible
-                      </button>
-                    )}
-                  </div>
-                  </div>
-                </ScrollReveal>
-              );
-            })}
+                    <div className={styles.cardContent}>
+                      <h3 className={styles.cardTitle}>{gift.title}</h3>
+                      <div className={styles.cardPrice}>{formatPrice(gift.price)}</div>
+                      {gift.description && <p className={styles.cardDescription}>{gift.description}</p>}
+                      
+                      {isAvailable ? (
+                        <Link href={`/gift/${gift.id}`} className={`btn-primary ${styles.btnGift}`}>
+                          Regalar
+                        </Link>
+                      ) : (
+                        <button className={`btn-primary ${styles.btnGift}`} disabled style={{opacity: 0.7}}>
+                          {statusText === 'Regalado' ? 'Completado' : 'No Disponible'}
+                        </button>
+                      )}
+                    </div>
+                    </div>
+                  </ScrollReveal>
+                );
+              })}
             
-            {gifts.length === 0 && (
+            {gifts.filter(g => g.isVisible).length === 0 && (
               <p style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '4rem 0', color: '#666' }}>
                 No hay regalos en la lista todavía.
               </p>

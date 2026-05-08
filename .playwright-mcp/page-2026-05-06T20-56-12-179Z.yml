@@ -1,0 +1,205 @@
+- generic [active] [ref=e1]:
+  - main [ref=e2]:
+    - generic [ref=e3]:
+      - img "Portada" [ref=e4]
+      - generic [ref=e6]:
+        - img "Novios" [ref=e8]
+        - heading "Melissa & Julio" [level=1] [ref=e9]
+        - generic [ref=e10]: ✦ ✦
+        - paragraph [ref=e11]: Nuestra mayor alegría es compartir este día con ustedes. Si desean tenernos un detalle, hemos preparado esta lista con mucho amor.
+      - img [ref=e13] [cursor=pointer]
+    - generic [ref=e15]:
+      - paragraph [ref=e16]: Faltan para nuestra boda
+      - generic [ref=e238]:
+        - generic [ref=e239]:
+          - generic [ref=e240]: "87"
+          - generic [ref=e241]: Días
+        - generic [ref=e242]: ":"
+        - generic [ref=e243]:
+          - generic [ref=e244]: "00"
+          - generic [ref=e245]: Horas
+        - generic [ref=e246]: ":"
+        - generic [ref=e247]:
+          - generic [ref=e248]: "03"
+          - generic [ref=e249]: Min
+        - generic [ref=e250]: ":"
+        - generic [ref=e251]:
+          - generic [ref=e252]: "48"
+          - generic [ref=e253]: Seg
+    - generic [ref=e17]:
+      - generic [ref=e19]:
+        - heading "Nuestra Historia" [level=2] [ref=e20]
+        - paragraph [ref=e21]: Momentos que atesoran nuestra historia juntos
+        - generic [ref=e22]:
+          - img "Gallery 0" [ref=e24] [cursor=pointer]
+          - img "Gallery 1" [ref=e26] [cursor=pointer]
+          - img "Gallery 2" [ref=e28] [cursor=pointer]
+          - img "Gallery 3" [ref=e30] [cursor=pointer]
+          - img "Gallery 4" [ref=e32] [cursor=pointer]
+          - img "Gallery 5" [ref=e34] [cursor=pointer]
+      - generic [ref=e36]:
+        - heading "¿Cómo funciona?" [level=2] [ref=e37]
+        - paragraph [ref=e38]: Tres simples pasos para hacernos llegar tu regalo
+        - generic [ref=e39]:
+          - generic [ref=e40]:
+            - generic [ref=e41]: "1"
+            - heading "Elige un Regalo" [level=3] [ref=e42]
+            - paragraph [ref=e43]: Explora nuestra lista y selecciona el detalle que más te guste. Dale clic al botón "Regalar".
+          - generic [ref=e44]:
+            - generic [ref=e45]: "2"
+            - heading "Transfiere el Monto" [level=3] [ref=e46]
+            - paragraph [ref=e47]: Realiza una transferencia bancaria a la cuenta indicada por el monto del regalo elegido.
+          - generic [ref=e48]:
+            - generic [ref=e49]: "3"
+            - heading "Confirma tu Regalo" [level=3] [ref=e50]
+            - paragraph [ref=e51]: Ingresa tu nombre y el número de comprobante para que podamos agradecerte personalmente.
+      - generic [ref=e52]:
+        - generic [ref=e53]:
+          - heading "Lista de Regalos" [level=2] [ref=e54]
+          - paragraph [ref=e55]: Cada detalle, por pequeño que sea, llena nuestro corazón de gratitud
+        - generic [ref=e56]:
+          - button "Todos 12" [ref=e57] [cursor=pointer]:
+            - text: Todos
+            - generic [ref=e58]: "12"
+          - button "Disponibles 12" [ref=e59] [cursor=pointer]:
+            - text: Disponibles
+            - generic [ref=e60]: "12"
+          - button "Reservados 0" [ref=e61] [cursor=pointer]:
+            - text: Reservados
+            - generic [ref=e62]: "0"
+          - button "Regalados 0" [ref=e63] [cursor=pointer]:
+            - text: Regalados
+            - generic [ref=e64]: "0"
+        - generic [ref=e65]:
+          - generic [ref=e67] [cursor=pointer]:
+            - generic [ref=e68]:
+              - generic [ref=e69]: Disponible
+              - img "BARRA DE SONIDO SAMSUNG" [ref=e71]
+            - generic [ref=e72]:
+              - heading "BARRA DE SONIDO SAMSUNG" [level=3] [ref=e73]
+              - generic [ref=e74]:
+                - generic [ref=e75]: Gs. 600.000
+                - generic [ref=e76]: 2 de 2
+              - link "Regalar" [ref=e79]:
+                - /url: /gift/cmouj822d0000ehblz02jqssc
+          - generic [ref=e81] [cursor=pointer]:
+            - generic [ref=e82]:
+              - generic [ref=e83]: Disponible
+              - img "PLANCHA GRILL JAM" [ref=e85]
+            - generic [ref=e86]:
+              - heading "PLANCHA GRILL JAM" [level=3] [ref=e87]
+              - generic [ref=e88]:
+                - generic [ref=e89]: Gs. 300.000
+                - generic [ref=e90]: 2 de 2
+              - link "Regalar" [ref=e93]:
+                - /url: /gift/cmouito5b000311qf6kixs98r
+          - generic [ref=e95] [cursor=pointer]:
+            - generic [ref=e96]:
+              - generic [ref=e97]: Disponible
+              - img "ENFRIADOR DE VINO" [ref=e99]
+            - generic [ref=e100]:
+              - heading "ENFRIADOR DE VINO" [level=3] [ref=e101]
+              - generic [ref=e102]:
+                - generic [ref=e103]: Gs. 650.000
+                - generic [ref=e104]: 3 de 3
+              - link "Regalar" [ref=e107]:
+                - /url: /gift/cmouiqm4e000211qfa2vafwcx
+          - generic [ref=e109] [cursor=pointer]:
+            - generic [ref=e110]:
+              - generic [ref=e111]: Disponible
+              - img "PROCESADOR BLACK DECKER" [ref=e113]
+            - generic [ref=e114]:
+              - heading "PROCESADOR BLACK DECKER" [level=3] [ref=e115]
+              - generic [ref=e116]:
+                - generic [ref=e117]: Gs. 400.000
+                - generic [ref=e118]: 2 de 2
+              - link "Regalar" [ref=e121]:
+                - /url: /gift/cmouijuy5000111qfm0lnwz8w
+          - generic [ref=e123] [cursor=pointer]:
+            - generic [ref=e124]:
+              - generic [ref=e125]: Disponible
+              - img "JUEGO DE CUBIERTOS TRAMONTINA LAGUNA 60PZAS" [ref=e127]
+            - generic [ref=e128]:
+              - heading "JUEGO DE CUBIERTOS TRAMONTINA LAGUNA 60PZAS" [level=3] [ref=e129]
+              - generic [ref=e130]:
+                - generic [ref=e131]: Gs. 250.000
+                - generic [ref=e132]: 2 de 2
+              - link "Regalar" [ref=e135]:
+                - /url: /gift/cmouifwp1000011qfc2fuccql
+          - generic [ref=e137] [cursor=pointer]:
+            - generic [ref=e138]:
+              - generic [ref=e139]: Disponible
+              - img "Lavarropas Tokyo Cecilia 6 Kg C.F." [ref=e141]
+            - generic [ref=e142]:
+              - heading "Lavarropas Tokyo Cecilia 6 Kg C.F." [level=3] [ref=e143]
+              - generic [ref=e144]:
+                - generic [ref=e145]: Gs. 600.000
+                - generic [ref=e146]: 4 de 4
+              - link "Regalar" [ref=e149]:
+                - /url: /gift/cmorhpe4r0000d5ddq2ghchb5
+          - generic [ref=e151] [cursor=pointer]:
+            - generic [ref=e152]:
+              - generic [ref=e153]: Disponible
+              - img "Secarropas Tokyo Cecilia 9Kg" [ref=e155]
+            - generic [ref=e156]:
+              - heading "Secarropas Tokyo Cecilia 9Kg" [level=3] [ref=e157]
+              - generic [ref=e159]: Gs. 2.316.000
+              - link "Regalar" [ref=e160]:
+                - /url: /gift/cmolxip4s00064t1uvjp42ad8
+          - generic [ref=e162] [cursor=pointer]:
+            - generic [ref=e163]:
+              - generic [ref=e164]: Disponible
+              - img "Smart TV 4K Samsung 55\" Q7F5 QLED Mart" [ref=e166]
+            - generic [ref=e167]:
+              - heading "Smart TV 4K Samsung 55\" Q7F5 QLED Mart" [level=3] [ref=e168]
+              - generic [ref=e170]: Gs. 5.190.000
+              - link "Regalar" [ref=e171]:
+                - /url: /gift/cmolxip0a00054t1ut4n7fy39
+          - generic [ref=e173] [cursor=pointer]:
+            - generic [ref=e174]:
+              - generic [ref=e175]: Disponible
+              - img "Heladera Tokyo 294 L" [ref=e177]
+            - generic [ref=e178]:
+              - heading "Heladera Tokyo 294 L" [level=3] [ref=e179]
+              - generic [ref=e181]: Gs. 3.635.000
+              - link "Regalar" [ref=e182]:
+                - /url: /gift/cmolxiovv00044t1u0ni8wly5
+          - generic [ref=e184] [cursor=pointer]:
+            - generic [ref=e185]:
+              - generic [ref=e186]: Disponible
+              - img "Sommier 180x200 cm" [ref=e188]
+            - generic [ref=e189]:
+              - heading "Sommier 180x200 cm" [level=3] [ref=e190]
+              - generic [ref=e192]: Gs. 7.900.000
+              - link "Regalar" [ref=e193]:
+                - /url: /gift/cmolxiore00034t1uhmzsp4yn
+          - generic [ref=e195] [cursor=pointer]:
+            - generic [ref=e196]:
+              - generic [ref=e197]: Disponible
+              - img "SACA CORCHO OSTER" [ref=e199]
+            - generic [ref=e200]:
+              - heading "SACA CORCHO OSTER" [level=3] [ref=e201]
+              - generic [ref=e202]:
+                - generic [ref=e203]: Gs. 350.000
+                - generic [ref=e204]: 2 de 2
+              - link "Regalar" [ref=e207]:
+                - /url: /gift/cmolxiomz00024t1uq8skuwky
+          - generic [ref=e209] [cursor=pointer]:
+            - generic [ref=e210]:
+              - generic [ref=e211]: Disponible
+              - img "ASPIRADORA KARCHER VERTICAL VCL1 2 EN 1 BLANCO" [ref=e213]
+            - generic [ref=e214]:
+              - heading "ASPIRADORA KARCHER VERTICAL VCL1 2 EN 1 BLANCO" [level=3] [ref=e215]
+              - generic [ref=e216]:
+                - generic [ref=e217]: Gs. 350.000
+                - generic [ref=e218]: 3 de 3
+              - link "Regalar" [ref=e221]:
+                - /url: /gift/cmolxioe000014t1uogrhm1ep
+      - generic [ref=e224]:
+        - generic [ref=e225]: ♥
+        - heading "¡Gracias de Corazón!" [level=2] [ref=e226]
+        - paragraph [ref=e227]: Su presencia y cariño son el regalo más grande que podemos recibir. Cada detalle que nos brindan nos ayuda a construir el hogar y los sueños que hemos soñado juntos. Los queremos mucho.
+        - paragraph [ref=e228]: Melissa & Julio
+  - button "Open Next.js Dev Tools" [ref=e234] [cursor=pointer]:
+    - img [ref=e235]
+  - alert [ref=e254]

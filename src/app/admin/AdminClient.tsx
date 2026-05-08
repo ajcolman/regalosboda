@@ -622,18 +622,18 @@ export default function AdminClient({
                     value={editingGift.title || ''}
                     onChange={e => setEditingGift({ ...editingGift, title: e.target.value })} />
                 </div>
-                <div className={styles.formGroup}>
-                  <label className={styles.label}>Precio (Gs.) *</label>
-                  <input type="number" className={styles.input} required
-                    value={editingGift.price || ''}
-                    onChange={e => setEditingGift({ ...editingGift, price: Number(e.target.value) })} />
-                </div>
+                  <div className={styles.formGroup}>
+                    <label className={styles.label}>Precio (Gs.) *</label>
+                    <input type="number" className={styles.input} required
+                      value={editingGift.price ?? ''}
+                      onChange={e => setEditingGift({ ...editingGift, price: e.target.value === '' ? 0 : Number(e.target.value) })} />
+                  </div>
                 <div className={styles.inputRow}>
                   <div className={styles.formGroup}>
                     <label className={styles.label}>Stock *</label>
                     <input type="number" className={styles.input} required min="1"
-                      value={editingGift.stock || 1}
-                      onChange={e => setEditingGift({ ...editingGift, stock: Number(e.target.value) })} />
+                      value={editingGift.stock ?? ''}
+                      onChange={e => setEditingGift({ ...editingGift, stock: e.target.value === '' ? 0 : Number(e.target.value) })} />
                   </div>
                   <div className={styles.formGroup}>
                     <label className={styles.label}>Visible en lista</label>
@@ -649,14 +649,14 @@ export default function AdminClient({
                   <div className={styles.formGroup}>
                     <label className={styles.label}>Regalados (confirmados)</label>
                     <input type="number" className={styles.input} min="0"
-                      value={editingGift.timesGifted || 0}
-                      onChange={e => setEditingGift({ ...editingGift, timesGifted: Number(e.target.value) })} />
+                      value={editingGift.timesGifted ?? ''}
+                      onChange={e => setEditingGift({ ...editingGift, timesGifted: e.target.value === '' ? 0 : Number(e.target.value) })} />
                   </div>
                   <div className={styles.formGroup}>
                     <label className={styles.label}>Pendientes de confirmar</label>
                     <input type="number" className={styles.input} min="0"
-                      value={editingGift.timesPending || 0}
-                      onChange={e => setEditingGift({ ...editingGift, timesPending: Number(e.target.value) })} />
+                      value={editingGift.timesPending ?? ''}
+                      onChange={e => setEditingGift({ ...editingGift, timesPending: e.target.value === '' ? 0 : Number(e.target.value) })} />
                   </div>
                 </div>
                 <div className={styles.formGroup}>

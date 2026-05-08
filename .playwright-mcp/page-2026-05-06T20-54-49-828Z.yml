@@ -1,0 +1,79 @@
+- generic [ref=e1]:
+  - button "Open Next.js Dev Tools" [ref=e24] [cursor=pointer]:
+    - img [ref=e25]
+  - alert [ref=e28]
+  - generic [ref=e29]:
+    - banner [ref=e30]:
+      - generic [ref=e31]:
+        - img [ref=e33]
+        - generic [ref=e35]:
+          - generic [ref=e36]: Melissa & Julio
+          - generic [ref=e37]: Panel de administración
+      - button "Cerrar sesión" [ref=e39] [cursor=pointer]
+    - generic [ref=e40]:
+      - generic [ref=e41]:
+        - generic [ref=e42]:
+          - img [ref=e44]
+          - generic [ref=e46]:
+            - generic [ref=e47]: Gs. 28.241.000
+            - generic [ref=e48]: Valor Total Lista
+        - generic [ref=e49]:
+          - img [ref=e51]
+          - generic [ref=e53]:
+            - generic [ref=e54]: Gs. 0
+            - generic [ref=e55]: Total Recibido
+        - generic [ref=e57]:
+          - img [ref=e59]
+          - generic [ref=e61]:
+            - generic [ref=e62]: Gs. 0
+            - generic [ref=e63]: Por Confirmar
+        - generic [ref=e64]:
+          - img [ref=e66]
+          - generic [ref=e68]:
+            - generic [ref=e69]: 0 / 12
+            - generic [ref=e70]: Regalos Completados
+      - navigation [ref=e72]:
+        - button "Regalos 12" [ref=e73] [cursor=pointer]:
+          - text: Regalos
+          - generic [ref=e74]: "12"
+        - button "Configuración" [active] [ref=e75] [cursor=pointer]
+        - button "Galería 6" [ref=e76] [cursor=pointer]:
+          - text: Galería
+          - generic [ref=e77]: "6"
+      - generic [ref=e345]:
+        - generic [ref=e346]:
+          - heading "Datos de la Boda" [level=3] [ref=e349]
+          - generic [ref=e350]:
+            - generic [ref=e351]:
+              - generic [ref=e352]: Nombres de los Novios
+              - 'textbox "Ej: Melissa & Julio" [ref=e353]': Melissa & Julio
+            - generic [ref=e354]:
+              - generic [ref=e355]: Fecha de la Boda
+              - textbox [ref=e356]: 2026-08-01T18:00
+            - generic [ref=e357]:
+              - generic [ref=e358]: URL Foto Portada (Hero)
+              - textbox "https://..." [ref=e359]: https://images.unsplash.com/photo-1606800052052-a08af7148866?q=80&w=2070&auto=format&fit=crop
+            - generic [ref=e360]:
+              - generic [ref=e361]: URL Foto Avatar (Circular)
+              - textbox "https://..." [ref=e362]: https://images.unsplash.com/photo-1522673607200-164d1b6ce486?q=80&w=2070&auto=format&fit=crop
+        - generic [ref=e363]:
+          - heading "Datos Bancarios" [level=3] [ref=e366]
+          - generic [ref=e367]:
+            - generic [ref=e368]:
+              - generic [ref=e369]:
+                - generic [ref=e370]: Banco
+                - textbox [ref=e371]: Banco Itaú
+              - generic [ref=e372]:
+                - generic [ref=e373]: Nro. Cuenta
+                - textbox [ref=e374]: "12345678"
+            - generic [ref=e375]:
+              - generic [ref=e376]:
+                - generic [ref=e377]: Titular
+                - textbox [ref=e378]: Julio Ibarra
+              - generic [ref=e379]:
+                - generic [ref=e380]: C.I. / RUC
+                - textbox [ref=e381]: 1.234.567
+            - generic [ref=e382]:
+              - generic [ref=e383]: Alias
+              - textbox [ref=e384]: boda.melyjulio
+        - button "Guardar Configuración" [ref=e386] [cursor=pointer]

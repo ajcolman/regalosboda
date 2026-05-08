@@ -1,0 +1,309 @@
+- generic [active] [ref=e1]:
+  - button "Open Next.js Dev Tools" [ref=e24] [cursor=pointer]:
+    - img [ref=e25]
+  - alert [ref=e28]
+  - generic [ref=e29]:
+    - banner [ref=e30]:
+      - generic [ref=e31]:
+        - img [ref=e33]
+        - generic [ref=e35]:
+          - generic [ref=e36]: Melissa & Julio
+          - generic [ref=e37]: Panel de administración
+      - button "Cerrar sesión" [ref=e39] [cursor=pointer]
+    - generic [ref=e40]:
+      - generic [ref=e41]:
+        - generic [ref=e42]:
+          - img [ref=e44]
+          - generic [ref=e46]:
+            - generic [ref=e47]: Gs. 28.241.000
+            - generic [ref=e48]: Valor Total Lista
+        - generic [ref=e49]:
+          - img [ref=e51]
+          - generic [ref=e53]:
+            - generic [ref=e54]: Gs. 0
+            - generic [ref=e55]: Total Recibido
+        - generic [ref=e57]:
+          - img [ref=e59]
+          - generic [ref=e61]:
+            - generic [ref=e62]: Gs. 0
+            - generic [ref=e63]: Por Confirmar
+        - generic [ref=e64]:
+          - img [ref=e66]
+          - generic [ref=e68]:
+            - generic [ref=e69]: 0 / 12
+            - generic [ref=e70]: Regalos Completados
+      - navigation [ref=e72]:
+        - button "Regalos 12" [ref=e73] [cursor=pointer]:
+          - text: Regalos
+          - generic [ref=e74]: "12"
+        - button "Configuración" [ref=e75] [cursor=pointer]
+        - button "Galería 6" [ref=e76] [cursor=pointer]:
+          - text: Galería
+          - generic [ref=e77]: "6"
+      - generic [ref=e78]:
+        - generic [ref=e79]:
+          - heading "Regalos Registrados" [level=3] [ref=e80]
+          - button "+ Nuevo Regalo" [ref=e81] [cursor=pointer]
+        - generic [ref=e82]:
+          - button "↓ Plantilla CSV" [ref=e83] [cursor=pointer]
+          - generic [ref=e84] [cursor=pointer]: Cargar CSV
+      - paragraph [ref=e85]:
+        - text: "Columnas del CSV:"
+        - code [ref=e86]: title
+        - code [ref=e87]: description
+        - code [ref=e88]: price
+        - code [ref=e89]: image_url
+        - code [ref=e90]: stock
+        - code [ref=e91]: visible
+      - table [ref=e93]:
+        - rowgroup [ref=e94]:
+          - row "Regalo Precio Stock Recibido Visible Estado Ref. Transferencia Acciones" [ref=e95]:
+            - columnheader "Regalo" [ref=e96]
+            - columnheader "Precio" [ref=e97]
+            - columnheader "Stock" [ref=e98]
+            - columnheader "Recibido" [ref=e99]
+            - columnheader "Visible" [ref=e100]
+            - columnheader "Estado" [ref=e101]
+            - columnheader "Ref. Transferencia" [ref=e102]
+            - columnheader "Acciones" [ref=e103]
+        - rowgroup [ref=e104]:
+          - row "BARRA DE SONIDO SAMSUNG BARRA DE SONIDO SAMSUNG Gs. 600.000 2 0 / 2 ● Visible Disponible — Editar Eliminar" [ref=e105]:
+            - cell "BARRA DE SONIDO SAMSUNG BARRA DE SONIDO SAMSUNG" [ref=e106]:
+              - generic [ref=e107]:
+                - img "BARRA DE SONIDO SAMSUNG" [ref=e108]
+                - generic [ref=e109]: BARRA DE SONIDO SAMSUNG
+            - cell "Gs. 600.000" [ref=e110]
+            - cell "2" [ref=e111]:
+              - generic [ref=e112]: "2"
+            - cell "0 / 2" [ref=e113]:
+              - text: "0"
+              - generic [ref=e114]: / 2
+            - cell "● Visible" [ref=e115]:
+              - generic [ref=e116]: ● Visible
+            - cell "Disponible" [ref=e117]:
+              - generic [ref=e118]: Disponible
+            - cell "—" [ref=e120]
+            - cell "Editar Eliminar" [ref=e121]:
+              - generic [ref=e122]:
+                - button "Editar" [ref=e123] [cursor=pointer]
+                - button "Eliminar" [ref=e124] [cursor=pointer]
+          - row "PLANCHA GRILL JAM PLANCHA GRILL JAM Gs. 300.000 2 0 / 2 ● Visible Disponible — Editar Eliminar" [ref=e125]:
+            - cell "PLANCHA GRILL JAM PLANCHA GRILL JAM" [ref=e126]:
+              - generic [ref=e127]:
+                - img "PLANCHA GRILL JAM" [ref=e128]
+                - generic [ref=e129]: PLANCHA GRILL JAM
+            - cell "Gs. 300.000" [ref=e130]
+            - cell "2" [ref=e131]:
+              - generic [ref=e132]: "2"
+            - cell "0 / 2" [ref=e133]:
+              - text: "0"
+              - generic [ref=e134]: / 2
+            - cell "● Visible" [ref=e135]:
+              - generic [ref=e136]: ● Visible
+            - cell "Disponible" [ref=e137]:
+              - generic [ref=e138]: Disponible
+            - cell "—" [ref=e140]
+            - cell "Editar Eliminar" [ref=e141]:
+              - generic [ref=e142]:
+                - button "Editar" [ref=e143] [cursor=pointer]
+                - button "Eliminar" [ref=e144] [cursor=pointer]
+          - row "ENFRIADOR DE VINO ENFRIADOR DE VINO Gs. 650.000 3 0 / 3 ● Visible Disponible — Editar Eliminar" [ref=e145]:
+            - cell "ENFRIADOR DE VINO ENFRIADOR DE VINO" [ref=e146]:
+              - generic [ref=e147]:
+                - img "ENFRIADOR DE VINO" [ref=e148]
+                - generic [ref=e149]: ENFRIADOR DE VINO
+            - cell "Gs. 650.000" [ref=e150]
+            - cell "3" [ref=e151]:
+              - generic [ref=e152]: "3"
+            - cell "0 / 3" [ref=e153]:
+              - text: "0"
+              - generic [ref=e154]: / 3
+            - cell "● Visible" [ref=e155]:
+              - generic [ref=e156]: ● Visible
+            - cell "Disponible" [ref=e157]:
+              - generic [ref=e158]: Disponible
+            - cell "—" [ref=e160]
+            - cell "Editar Eliminar" [ref=e161]:
+              - generic [ref=e162]:
+                - button "Editar" [ref=e163] [cursor=pointer]
+                - button "Eliminar" [ref=e164] [cursor=pointer]
+          - row "PROCESADOR BLACK DECKER PROCESADOR BLACK DECKER Gs. 400.000 2 0 / 2 ● Visible Disponible — Editar Eliminar" [ref=e165]:
+            - cell "PROCESADOR BLACK DECKER PROCESADOR BLACK DECKER" [ref=e166]:
+              - generic [ref=e167]:
+                - img "PROCESADOR BLACK DECKER" [ref=e168]
+                - generic [ref=e169]: PROCESADOR BLACK DECKER
+            - cell "Gs. 400.000" [ref=e170]
+            - cell "2" [ref=e171]:
+              - generic [ref=e172]: "2"
+            - cell "0 / 2" [ref=e173]:
+              - text: "0"
+              - generic [ref=e174]: / 2
+            - cell "● Visible" [ref=e175]:
+              - generic [ref=e176]: ● Visible
+            - cell "Disponible" [ref=e177]:
+              - generic [ref=e178]: Disponible
+            - cell "—" [ref=e180]
+            - cell "Editar Eliminar" [ref=e181]:
+              - generic [ref=e182]:
+                - button "Editar" [ref=e183] [cursor=pointer]
+                - button "Eliminar" [ref=e184] [cursor=pointer]
+          - row "JUEGO DE CUBIERTOS TRAMONTINA LAGUNA 60PZAS JUEGO DE CUBIERTOS TRAMONTINA LAGUNA 60PZAS Gs. 250.000 2 0 / 2 ● Visible Disponible — Editar Eliminar" [ref=e185]:
+            - cell "JUEGO DE CUBIERTOS TRAMONTINA LAGUNA 60PZAS JUEGO DE CUBIERTOS TRAMONTINA LAGUNA 60PZAS" [ref=e186]:
+              - generic [ref=e187]:
+                - img "JUEGO DE CUBIERTOS TRAMONTINA LAGUNA 60PZAS" [ref=e188]
+                - generic [ref=e189]: JUEGO DE CUBIERTOS TRAMONTINA LAGUNA 60PZAS
+            - cell "Gs. 250.000" [ref=e190]
+            - cell "2" [ref=e191]:
+              - generic [ref=e192]: "2"
+            - cell "0 / 2" [ref=e193]:
+              - text: "0"
+              - generic [ref=e194]: / 2
+            - cell "● Visible" [ref=e195]:
+              - generic [ref=e196]: ● Visible
+            - cell "Disponible" [ref=e197]:
+              - generic [ref=e198]: Disponible
+            - cell "—" [ref=e200]
+            - cell "Editar Eliminar" [ref=e201]:
+              - generic [ref=e202]:
+                - button "Editar" [ref=e203] [cursor=pointer]
+                - button "Eliminar" [ref=e204] [cursor=pointer]
+          - row "Lavarropas Tokyo Cecilia 6 Kg C.F. Lavarropas Tokyo Cecilia 6 Kg C.F. Gs. 600.000 4 0 / 4 ● Visible Disponible — Editar Eliminar" [ref=e205]:
+            - cell "Lavarropas Tokyo Cecilia 6 Kg C.F. Lavarropas Tokyo Cecilia 6 Kg C.F." [ref=e206]:
+              - generic [ref=e207]:
+                - img "Lavarropas Tokyo Cecilia 6 Kg C.F." [ref=e208]
+                - generic [ref=e209]: Lavarropas Tokyo Cecilia 6 Kg C.F.
+            - cell "Gs. 600.000" [ref=e210]
+            - cell "4" [ref=e211]:
+              - generic [ref=e212]: "4"
+            - cell "0 / 4" [ref=e213]:
+              - text: "0"
+              - generic [ref=e214]: / 4
+            - cell "● Visible" [ref=e215]:
+              - generic [ref=e216]: ● Visible
+            - cell "Disponible" [ref=e217]:
+              - generic [ref=e218]: Disponible
+            - cell "—" [ref=e220]
+            - cell "Editar Eliminar" [ref=e221]:
+              - generic [ref=e222]:
+                - button "Editar" [ref=e223] [cursor=pointer]
+                - button "Eliminar" [ref=e224] [cursor=pointer]
+          - row "Secarropas Tokyo Cecilia 9Kg Secarropas Tokyo Cecilia 9Kg Gs. 2.316.000 1 0 / 1 ● Visible Disponible — Editar Eliminar" [ref=e225]:
+            - cell "Secarropas Tokyo Cecilia 9Kg Secarropas Tokyo Cecilia 9Kg" [ref=e226]:
+              - generic [ref=e227]:
+                - img "Secarropas Tokyo Cecilia 9Kg" [ref=e228]
+                - generic [ref=e229]: Secarropas Tokyo Cecilia 9Kg
+            - cell "Gs. 2.316.000" [ref=e230]
+            - cell "1" [ref=e231]:
+              - generic [ref=e232]: "1"
+            - cell "0 / 1" [ref=e233]:
+              - text: "0"
+              - generic [ref=e234]: / 1
+            - cell "● Visible" [ref=e235]:
+              - generic [ref=e236]: ● Visible
+            - cell "Disponible" [ref=e237]:
+              - generic [ref=e238]: Disponible
+            - cell "—" [ref=e240]
+            - cell "Editar Eliminar" [ref=e241]:
+              - generic [ref=e242]:
+                - button "Editar" [ref=e243] [cursor=pointer]
+                - button "Eliminar" [ref=e244] [cursor=pointer]
+          - row "Smart TV 4K Samsung 55\" Q7F5 QLED Mart Smart TV 4K Samsung 55\" Q7F5 QLED Mart Gs. 5.190.000 1 0 / 1 ● Visible Disponible — Editar Eliminar" [ref=e245]:
+            - cell "Smart TV 4K Samsung 55\" Q7F5 QLED Mart Smart TV 4K Samsung 55\" Q7F5 QLED Mart" [ref=e246]:
+              - generic [ref=e247]:
+                - img "Smart TV 4K Samsung 55\" Q7F5 QLED Mart" [ref=e248]
+                - generic [ref=e249]: Smart TV 4K Samsung 55" Q7F5 QLED Mart
+            - cell "Gs. 5.190.000" [ref=e250]
+            - cell "1" [ref=e251]:
+              - generic [ref=e252]: "1"
+            - cell "0 / 1" [ref=e253]:
+              - text: "0"
+              - generic [ref=e254]: / 1
+            - cell "● Visible" [ref=e255]:
+              - generic [ref=e256]: ● Visible
+            - cell "Disponible" [ref=e257]:
+              - generic [ref=e258]: Disponible
+            - cell "—" [ref=e260]
+            - cell "Editar Eliminar" [ref=e261]:
+              - generic [ref=e262]:
+                - button "Editar" [ref=e263] [cursor=pointer]
+                - button "Eliminar" [ref=e264] [cursor=pointer]
+          - row "Heladera Tokyo 294 L Heladera Tokyo 294 L Gs. 3.635.000 1 0 / 1 ● Visible Disponible — Editar Eliminar" [ref=e265]:
+            - cell "Heladera Tokyo 294 L Heladera Tokyo 294 L" [ref=e266]:
+              - generic [ref=e267]:
+                - img "Heladera Tokyo 294 L" [ref=e268]
+                - generic [ref=e269]: Heladera Tokyo 294 L
+            - cell "Gs. 3.635.000" [ref=e270]
+            - cell "1" [ref=e271]:
+              - generic [ref=e272]: "1"
+            - cell "0 / 1" [ref=e273]:
+              - text: "0"
+              - generic [ref=e274]: / 1
+            - cell "● Visible" [ref=e275]:
+              - generic [ref=e276]: ● Visible
+            - cell "Disponible" [ref=e277]:
+              - generic [ref=e278]: Disponible
+            - cell "—" [ref=e280]
+            - cell "Editar Eliminar" [ref=e281]:
+              - generic [ref=e282]:
+                - button "Editar" [ref=e283] [cursor=pointer]
+                - button "Eliminar" [ref=e284] [cursor=pointer]
+          - row "Sommier 180x200 cm Sommier 180x200 cm Gs. 7.900.000 1 0 / 1 ● Visible Disponible — Editar Eliminar" [ref=e285]:
+            - cell "Sommier 180x200 cm Sommier 180x200 cm" [ref=e286]:
+              - generic [ref=e287]:
+                - img "Sommier 180x200 cm" [ref=e288]
+                - generic [ref=e289]: Sommier 180x200 cm
+            - cell "Gs. 7.900.000" [ref=e290]
+            - cell "1" [ref=e291]:
+              - generic [ref=e292]: "1"
+            - cell "0 / 1" [ref=e293]:
+              - text: "0"
+              - generic [ref=e294]: / 1
+            - cell "● Visible" [ref=e295]:
+              - generic [ref=e296]: ● Visible
+            - cell "Disponible" [ref=e297]:
+              - generic [ref=e298]: Disponible
+            - cell "—" [ref=e300]
+            - cell "Editar Eliminar" [ref=e301]:
+              - generic [ref=e302]:
+                - button "Editar" [ref=e303] [cursor=pointer]
+                - button "Eliminar" [ref=e304] [cursor=pointer]
+          - row "SACA CORCHO OSTER SACA CORCHO OSTER Gs. 350.000 2 0 / 2 ● Visible Disponible — Editar Eliminar" [ref=e305]:
+            - cell "SACA CORCHO OSTER SACA CORCHO OSTER" [ref=e306]:
+              - generic [ref=e307]:
+                - img "SACA CORCHO OSTER" [ref=e308]
+                - generic [ref=e309]: SACA CORCHO OSTER
+            - cell "Gs. 350.000" [ref=e310]
+            - cell "2" [ref=e311]:
+              - generic [ref=e312]: "2"
+            - cell "0 / 2" [ref=e313]:
+              - text: "0"
+              - generic [ref=e314]: / 2
+            - cell "● Visible" [ref=e315]:
+              - generic [ref=e316]: ● Visible
+            - cell "Disponible" [ref=e317]:
+              - generic [ref=e318]: Disponible
+            - cell "—" [ref=e320]
+            - cell "Editar Eliminar" [ref=e321]:
+              - generic [ref=e322]:
+                - button "Editar" [ref=e323] [cursor=pointer]
+                - button "Eliminar" [ref=e324] [cursor=pointer]
+          - row "ASPIRADORA KARCHER VERTICAL VCL1 2 EN 1 BLANCO ASPIRADORA KARCHER VERTICAL VCL1 2 EN 1 BLANCO Gs. 350.000 3 0 / 3 ● Visible Disponible — Editar Eliminar" [ref=e325]:
+            - cell "ASPIRADORA KARCHER VERTICAL VCL1 2 EN 1 BLANCO ASPIRADORA KARCHER VERTICAL VCL1 2 EN 1 BLANCO" [ref=e326]:
+              - generic [ref=e327]:
+                - img "ASPIRADORA KARCHER VERTICAL VCL1 2 EN 1 BLANCO" [ref=e328]
+                - generic [ref=e329]: ASPIRADORA KARCHER VERTICAL VCL1 2 EN 1 BLANCO
+            - cell "Gs. 350.000" [ref=e330]
+            - cell "3" [ref=e331]:
+              - generic [ref=e332]: "3"
+            - cell "0 / 3" [ref=e333]:
+              - text: "0"
+              - generic [ref=e334]: / 3
+            - cell "● Visible" [ref=e335]:
+              - generic [ref=e336]: ● Visible
+            - cell "Disponible" [ref=e337]:
+              - generic [ref=e338]: Disponible
+            - cell "—" [ref=e340]
+            - cell "Editar Eliminar" [ref=e341]:
+              - generic [ref=e342]:
+                - button "Editar" [ref=e343] [cursor=pointer]
+                - button "Eliminar" [ref=e344] [cursor=pointer]

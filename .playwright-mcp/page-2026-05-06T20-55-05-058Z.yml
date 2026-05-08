@@ -1,0 +1,69 @@
+- generic [ref=e1]:
+  - button "Open Next.js Dev Tools" [ref=e24] [cursor=pointer]:
+    - img [ref=e25]
+  - alert [ref=e28]
+  - generic [ref=e29]:
+    - banner [ref=e30]:
+      - generic [ref=e31]:
+        - img [ref=e33]
+        - generic [ref=e35]:
+          - generic [ref=e36]: Melissa & Julio
+          - generic [ref=e37]: Panel de administración
+      - button "Cerrar sesión" [ref=e39] [cursor=pointer]
+    - generic [ref=e40]:
+      - generic [ref=e41]:
+        - generic [ref=e42]:
+          - img [ref=e44]
+          - generic [ref=e46]:
+            - generic [ref=e47]: Gs. 28.241.000
+            - generic [ref=e48]: Valor Total Lista
+        - generic [ref=e49]:
+          - img [ref=e51]
+          - generic [ref=e53]:
+            - generic [ref=e54]: Gs. 0
+            - generic [ref=e55]: Total Recibido
+        - generic [ref=e57]:
+          - img [ref=e59]
+          - generic [ref=e61]:
+            - generic [ref=e62]: Gs. 0
+            - generic [ref=e63]: Por Confirmar
+        - generic [ref=e64]:
+          - img [ref=e66]
+          - generic [ref=e68]:
+            - generic [ref=e69]: 0 / 12
+            - generic [ref=e70]: Regalos Completados
+      - navigation [ref=e72]:
+        - button "Regalos 12" [ref=e73] [cursor=pointer]:
+          - text: Regalos
+          - generic [ref=e74]: "12"
+        - button "Configuración" [ref=e75] [cursor=pointer]
+        - button "Galería 6" [active] [ref=e76] [cursor=pointer]:
+          - text: Galería
+          - generic [ref=e77]: "6"
+      - generic [ref=e387]:
+        - generic [ref=e388]:
+          - heading "Galería de Fotos" [level=3] [ref=e390]
+          - generic [ref=e391]: 6 fotos
+        - generic [ref=e392]:
+          - generic [ref=e393]:
+            - textbox "Pega aquí la URL de la imagen…" [ref=e394]
+            - button "Añadir" [ref=e395] [cursor=pointer]
+          - generic [ref=e396]:
+            - generic [ref=e397]:
+              - img "Foto 1" [ref=e398]
+              - button "✕" [ref=e400] [cursor=pointer]
+            - generic [ref=e401]:
+              - img "Foto 2" [ref=e402]
+              - button "✕" [ref=e404] [cursor=pointer]
+            - generic [ref=e405]:
+              - img "Foto 3" [ref=e406]
+              - button "✕" [ref=e408] [cursor=pointer]
+            - generic [ref=e409]:
+              - img "Foto 4" [ref=e410]
+              - button "✕" [ref=e412] [cursor=pointer]
+            - generic [ref=e413]:
+              - img "Foto 5" [ref=e414]
+              - button "✕" [ref=e416] [cursor=pointer]
+            - generic [ref=e417]:
+              - img "Foto 6" [ref=e418]
+              - button "✕" [ref=e420] [cursor=pointer]

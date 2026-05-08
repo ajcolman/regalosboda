@@ -388,6 +388,18 @@
   gap: 1rem;
 }
 
+@media (max-width: 600px) {
+  .inputRow {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+  }
+  
+  .input {
+    padding: 12px 13px;
+    font-size: 16px; /* Evita que iOS haga zoom al enfocar */
+  }
+}
+
 .btnSave {
   width: 100%;
   margin-top: 0.75rem;

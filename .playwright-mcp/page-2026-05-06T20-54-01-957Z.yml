@@ -1,0 +1,21 @@
+- generic [ref=e1]:
+  - generic [ref=e2]:
+    - generic [ref=e4]:
+      - generic [ref=e5]: ♥
+      - heading "Lista de Regalos" [level=1] [ref=e6]
+      - generic [ref=e7]: ✦ ✦
+      - paragraph [ref=e8]: Panel de administración para gestionar la lista de regalos de boda. Solo personas autorizadas pueden acceder.
+    - generic [ref=e10]:
+      - heading "Panel Privado" [level=2] [ref=e11]
+      - paragraph [ref=e12]: Ingresa la contraseña para continuar
+      - generic [ref=e13]:
+        - generic [ref=e14]:
+          - generic [ref=e15]: Contraseña
+          - textbox "Contraseña" [active] [ref=e16]:
+            - /placeholder: ••••••••
+        - button "Entrar al Panel" [ref=e17] [cursor=pointer]
+      - link "← Volver al sitio" [ref=e18] [cursor=pointer]:
+        - /url: /
+  - button "Open Next.js Dev Tools" [ref=e24] [cursor=pointer]:
+    - img [ref=e25]
+  - alert [ref=e28]

@@ -1,0 +1,18 @@
+- generic [ref=e1]:
+  - generic [ref=e2]:
+    - text: ✦ ✦
+    - generic [ref=e4]:
+      - generic [ref=e6]: ♥
+      - heading "Panel Privado" [level=2] [ref=e7]
+      - paragraph [ref=e8]: Ingresa la contraseña para continuar
+      - generic [ref=e9]:
+        - generic [ref=e10]:
+          - generic [ref=e11]: Contraseña
+          - textbox "Contraseña" [active] [ref=e12]:
+            - /placeholder: ••••••••
+        - button "Entrar al Panel" [ref=e13] [cursor=pointer]
+      - link "← Volver al sitio" [ref=e14] [cursor=pointer]:
+        - /url: /
+  - button "Open Next.js Dev Tools" [ref=e20] [cursor=pointer]:
+    - img [ref=e21]
+  - alert [ref=e24]

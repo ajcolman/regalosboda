@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Papa from 'papaparse';
 import styles from './admin.module.css';
+import ImageDropzone from '@/components/ImageDropzone';
 
 interface Gift {
   id: string;
@@ -207,6 +208,11 @@ export default function AdminClient({
     const updated = [...galleryArray, newGalleryUrl.trim()];
     saveSettings({ galleryImages: JSON.stringify(updated) });
     setNewGalleryUrl('');
+  };
+
+  const uploadGalleryImage = (url: string) => {
+    const updated = [...galleryArray, url];
+    saveSettings({ galleryImages: JSON.stringify(updated) });
   };
 
   const removeGalleryImage = (index: number) => {
@@ -487,17 +493,35 @@ export default function AdminClient({
                   <input type="datetime-local" className={styles.input} value={settings.weddingDate || ''}
                     onChange={e => setSettings({ ...settings, weddingDate: e.target.value })} />
                 </div>
-                <div className={styles.formGroup}>
-                  <label className={styles.label}>URL Foto Portada (Hero)</label>
-                  <input type="text" className={styles.input} value={settings.coverPhotoUrl || ''}
-                    onChange={e => setSettings({ ...settings, coverPhotoUrl: e.target.value })}
-                    placeholder="https://..." />
+                <div className={styles.formGroup} style={{ borderBottom: '1px solid var(--border-light)', paddingBottom: '1.25rem', marginBottom: '1.25rem' }}>
+                  <label className={styles.label}>Foto Portada (Hero) - Aspecto 16:9</label>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '0.75rem', marginTop: '0.25rem' }}>
+                    <ImageDropzone 
+                      aspectRatio="16:9" 
+                      onUploadComplete={(url) => setSettings({ ...settings, coverPhotoUrl: url })} 
+                    />
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                      <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', minWidth: 'fit-content' }}>Enlace actual:</span>
+                      <input type="text" className={styles.input} value={settings.coverPhotoUrl || ''}
+                        onChange={e => setSettings({ ...settings, coverPhotoUrl: e.target.value })}
+                        placeholder="https://..." style={{ fontSize: '0.8rem', padding: '6px 10px' }} />
+                    </div>
+                  </div>
                 </div>
-                <div className={styles.formGroup}>
-                  <label className={styles.label}>URL Foto Avatar (Circular)</label>
-                  <input type="text" className={styles.input} value={settings.avatarPhotoUrl || ''}
-                    onChange={e => setSettings({ ...settings, avatarPhotoUrl: e.target.value })}
-                    placeholder="https://..." />
+                <div className={styles.formGroup} style={{ borderBottom: '1px solid var(--border-light)', paddingBottom: '1.25rem', marginBottom: '1.25rem' }}>
+                  <label className={styles.label}>Foto Avatar (Circular) - Aspecto 1:1</label>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '0.75rem', marginTop: '0.25rem' }}>
+                    <ImageDropzone 
+                      aspectRatio="circle" 
+                      onUploadComplete={(url) => setSettings({ ...settings, avatarPhotoUrl: url })} 
+                    />
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                      <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', minWidth: 'fit-content' }}>Enlace actual:</span>
+                      <input type="text" className={styles.input} value={settings.avatarPhotoUrl || ''}
+                        onChange={e => setSettings({ ...settings, avatarPhotoUrl: e.target.value })}
+                        placeholder="https://..." style={{ fontSize: '0.8rem', padding: '6px 10px' }} />
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -570,11 +594,18 @@ export default function AdminClient({
               </span>
             </div>
             <div className={styles.cardBody}>
+              <div style={{ marginBottom: '1.25rem' }}>
+                <ImageDropzone 
+                  aspectRatio="free" 
+                  onUploadComplete={uploadGalleryImage}
+                  label="Subir foto a la Galería"
+                />
+              </div>
               <div className={styles.galleryInputRow}>
                 <input
                   type="text"
                   className={styles.input}
-                  placeholder="Pega aquí la URL de la imagen…"
+                  placeholder="O pega aquí la URL de la imagen…"
                   value={newGalleryUrl}
                   onChange={e => setNewGalleryUrl(e.target.value)}
                   onKeyDown={e => e.key === 'Enter' && (e.preventDefault(), addGalleryImage())}
@@ -659,12 +690,21 @@ export default function AdminClient({
                       onChange={e => setEditingGift({ ...editingGift, timesPending: e.target.value === '' ? 0 : Number(e.target.value) })} />
                   </div>
                 </div>
-                <div className={styles.formGroup}>
-                  <label className={styles.label}>URL de la Imagen</label>
-                  <input type="text" className={styles.input}
-                    value={editingGift.image_url || ''}
-                    onChange={e => setEditingGift({ ...editingGift, image_url: e.target.value })}
-                    placeholder="https://..." />
+                <div className={styles.formGroup} style={{ borderTop: '1px solid var(--border-light)', paddingTop: '1.25rem', marginTop: '1.25rem' }}>
+                  <label className={styles.label}>Imagen del Regalo - Aspecto 4:3</label>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '0.75rem', marginTop: '0.25rem' }}>
+                    <ImageDropzone 
+                      aspectRatio="free" 
+                      onUploadComplete={(url) => setEditingGift({ ...editingGift, image_url: url })} 
+                    />
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                      <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', minWidth: 'fit-content' }}>Enlace actual:</span>
+                      <input type="text" className={styles.input}
+                        value={editingGift.image_url || ''}
+                        onChange={e => setEditingGift({ ...editingGift, image_url: e.target.value })}
+                        placeholder="https://..." style={{ fontSize: '0.8rem', padding: '6px 10px' }} />
+                    </div>
+                  </div>
                 </div>
                 <div className={styles.formGroup}>
                   <label className={styles.label}>Descripción</label>

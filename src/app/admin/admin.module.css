@@ -935,3 +935,50 @@
   background: var(--surface-2);
   border-radius: 0 0 var(--radius-lg) var(--radius-lg);
 }
+
+/* ── Avisos de regalos (Web Push) ── */
+.pushWarn {
+  background: var(--warning-light, #fdf3e2);
+  border: 1px solid var(--warning, #c87a0a);
+  border-left-width: 3px;
+  border-radius: var(--radius-sm);
+  padding: 0.9rem 1rem;
+  font-size: 0.85rem;
+  line-height: 1.55;
+  color: var(--foreground);
+}
+
+.pushSteps {
+  margin: 0.6rem 0 0;
+  padding-left: 1.15rem;
+}
+
+.pushSteps li {
+  margin-bottom: 0.35rem;
+}
+
+.pushOk {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--success, #4a9e6a);
+  margin-bottom: 0.9rem;
+}
+
+.pushOk .statusDot {
+  background: var(--success, #4a9e6a);
+}
+
+.pushActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.pushMessage {
+  margin-top: 0.9rem;
+  font-size: 0.82rem;
+  color: var(--text-muted);
+}

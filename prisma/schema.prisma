@@ -26,6 +26,16 @@ model Gift {
   updatedAt          DateTime @updatedAt
 }
 
+/// Suscripciones Web Push de los administradores. Una fila por dispositivo/navegador.
+model PushSubscription {
+  id        String   @id @default(cuid())
+  endpoint  String   @unique
+  p256dh    String
+  auth      String
+  label     String? // Para reconocer el dispositivo, ej. "iPhone de Ana"
+  createdAt DateTime @default(now())
+}
+
 model Settings {
   id              String  @id @default(cuid())
   coupleNames     String  @default("Nuestros Nombres")

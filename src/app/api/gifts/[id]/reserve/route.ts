@@ -1,5 +1,13 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { notifyAdmins } from '@/lib/push';
+
+const formatGuaranies = (price: number) =>
+  new Intl.NumberFormat('es-PY', {
+    style: 'currency',
+    currency: 'PYG',
+    minimumFractionDigits: 0,
+  }).format(price);
 
 /**
  * Reserva una unidad del regalo de forma atómica.
@@ -53,6 +61,27 @@ export async function POST(request: Request, context: { params: Promise<{ id: st
         },
         { status: 409 }
       );
+    }
+
+    // Aviso a los administradores. Va después del UPDATE, así sólo notifica
+    // reservas que realmente quedaron registradas, y aislado en su propio
+    // try/catch para que una caída del servicio de push no le muestre un error
+    // al invitado por un regalo que sí se guardó.
+    try {
+      const gift = await prisma.gift.findUnique({ where: { id: params.id } });
+      if (gift) {
+        const restantes = gift.stock - gift.timesGifted - gift.timesPending;
+        await notifyAdmins({
+          title: '🎁 ¡Nuevo regalo!',
+          body:
+            `${guestName} confirmó "${gift.title}" (${formatGuaranies(gift.price)}).\n` +
+            `Comprobante: ${reference}\n` +
+            `Quedan ${restantes} de ${gift.stock}.`,
+          url: '/admin',
+        });
+      }
+    } catch (notifyError) {
+      console.error('No se pudo notificar la reserva:', notifyError);
     }
 
     return NextResponse.json({ success: true });

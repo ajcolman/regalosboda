@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Papa from 'papaparse';
 import styles from './admin.module.css';
 import ImageDropzone from '@/components/ImageDropzone';
+import PushNotifications from '@/components/PushNotifications';
 import { deriveStatusField } from '@/lib/giftStatus';
 
 interface Gift {
@@ -491,6 +492,9 @@ export default function AdminClient({
             ═══════════════════════════ */}
         {activeTab === 'settings' && (
           <div className={styles.settingsGrid}>
+            {/* Push notifications */}
+            <PushNotifications />
+
             {/* Wedding data */}
             <div className={styles.card}>
               <div className={styles.cardHeader}>

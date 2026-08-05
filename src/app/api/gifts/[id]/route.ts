@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { deriveStatusField } from '@/lib/giftStatus';
 
 export async function GET(request: Request, context: { params: Promise<{ id: string }> }) {
   try {
@@ -26,12 +27,23 @@ export async function PATCH(request: Request, context: { params: Promise<{ id: s
     if (body.stock !== undefined) updateData.stock = parseInt(body.stock);
     if (body.timesGifted !== undefined) updateData.timesGifted = parseInt(body.timesGifted);
     if (body.timesPending !== undefined) updateData.timesPending = parseInt(body.timesPending);
-    
-    const gift = await prisma.gift.update({
+
+    // `status` es legacy y siempre se deriva de los contadores: ignoramos lo que mande el cliente.
+    delete updateData.status;
+
+    let gift = await prisma.gift.update({
       where: { id: params.id },
       data: updateData,
     });
-    
+
+    const derived = deriveStatusField(gift);
+    if (gift.status !== derived) {
+      gift = await prisma.gift.update({
+        where: { id: params.id },
+        data: { status: derived },
+      });
+    }
+
     return NextResponse.json(gift);
   } catch (error) {
     return NextResponse.json({ error: 'Failed to update gift' }, { status: 500 });

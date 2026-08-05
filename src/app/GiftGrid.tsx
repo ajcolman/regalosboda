@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import styles from './home.module.css';
 import ScrollReveal from '@/components/ScrollReveal';
+import { getGiftStatus } from '@/lib/giftStatus';
 
 interface Gift {
   id: string;
@@ -11,14 +12,6 @@ interface Gift {
   stock: number;
   timesGifted: number;
   timesPending: number;
-}
-
-function getStatus(gift: Gift) {
-  if (gift.timesGifted >= gift.stock)
-    return { text: 'Regalado', type: 'gifted' as const };
-  if (gift.timesGifted + gift.timesPending >= gift.stock)
-    return { text: 'Reservado', type: 'reserved' as const };
-  return { text: 'Disponible', type: 'available' as const };
 }
 
 function formatPrice(price: number) {
@@ -33,7 +26,7 @@ export default function GiftGrid({ gifts }: { gifts: Gift[] }) {
   return (
     <div className={styles.grid}>
       {gifts.map((gift, idx) => {
-        const status = getStatus(gift);
+        const status = getGiftStatus(gift);
         const isAvailable = status.type === 'available';
 
         const badgeClass =

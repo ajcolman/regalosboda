@@ -10,9 +10,6 @@ interface Gift {
   description: string | null;
   image_url: string | null;
   price: number;
-  status: string;
-  timesPending: number;
-  transfer_reference: string | null;
 }
 
 interface Settings {
@@ -69,24 +66,17 @@ export default function GiftDetailClient({ gift, settings }: { gift: Gift; setti
         return;
       }
 
-      const newReference = gift.transfer_reference
-        ? `${gift.transfer_reference} | [${guestName}] ${reference}`
-        : `[${guestName}] ${reference}`;
-
-      const res = await fetch(`/api/gifts/${gift.id}`, {
-        method: 'PATCH',
+      const res = await fetch(`/api/gifts/${gift.id}/reserve`, {
+        method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          status: 'PENDING_CONFIRMATION',
-          timesPending: gift.timesPending + 1,
-          transfer_reference: newReference,
-        }),
+        body: JSON.stringify({ guestName, reference }),
       });
 
       if (res.ok) {
         setSuccess(true);
       } else {
-        setError('Ocurrió un error al confirmar. Intenta nuevamente.');
+        const data = await res.json().catch(() => ({}));
+        setError(data.message || 'Ocurrió un error al confirmar. Intenta nuevamente.');
       }
     } catch {
       setError('Error de conexión. Por favor intenta de nuevo.');

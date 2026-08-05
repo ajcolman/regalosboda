@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation';
 import { prisma } from '@/lib/prisma';
 import GiftDetailClient from './GiftDetailClient';
 import Link from 'next/link';
+import { isGiftAvailable } from '@/lib/giftStatus';
 
 export const revalidate = 0;
 
@@ -20,7 +21,7 @@ export default async function GiftPage({ params }: { params: Promise<{ id: strin
     settings = await prisma.settings.create({ data: {} });
   }
 
-  if (gift.status !== 'AVAILABLE') {
+  if (!isGiftAvailable(gift)) {
     return (
       <div style={{ maxWidth: '800px', margin: '4rem auto', textAlign: 'center', padding: '0 20px' }}>
         <h1 style={{ fontFamily: 'var(--font-serif)', fontSize: '2rem', marginBottom: '1rem' }}>

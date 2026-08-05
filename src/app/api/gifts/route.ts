@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { deriveStatusField } from '@/lib/giftStatus';
 
 export async function GET() {
   try {
@@ -22,16 +23,21 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Title and price are required' }, { status: 400 });
     }
 
+    const counters = {
+      stock: stock !== undefined ? parseInt(stock) : 1,
+      timesGifted: timesGifted !== undefined ? parseInt(timesGifted) : 0,
+      timesPending: timesPending !== undefined ? parseInt(timesPending) : 0,
+    };
+
     const gift = await prisma.gift.create({
       data: {
         title,
         description,
         image_url,
         price: parseFloat(price),
-        stock: stock !== undefined ? parseInt(stock) : 1,
         isVisible: isVisible !== undefined ? isVisible : true,
-        timesGifted: timesGifted !== undefined ? parseInt(timesGifted) : 0,
-        timesPending: timesPending !== undefined ? parseInt(timesPending) : 0,
+        ...counters,
+        status: deriveStatusField(counters),
       },
     });
 

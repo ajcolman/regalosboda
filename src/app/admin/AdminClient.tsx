@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Papa from 'papaparse';
 import styles from './admin.module.css';
 import ImageDropzone from '@/components/ImageDropzone';
+import { deriveStatusField } from '@/lib/giftStatus';
 
 interface Gift {
   id: string;
@@ -126,18 +127,7 @@ export default function AdminClient({
     });
   };
 
-  const updateStatus = async (id: string, newStatus: string) => {
-    if (!confirm('¿Seguro que deseas realizar esta acción?')) return;
-    const gift = gifts.find(g => g.id === id);
-    if (!gift) return;
-    let updates: Partial<Gift> & { status: string } = { status: newStatus };
-    if (newStatus === 'GIFTED' && gift.status === 'PENDING_CONFIRMATION') {
-      updates.timesGifted  = gift.timesGifted + 1;
-      updates.timesPending = Math.max(0, gift.timesPending - 1);
-    } else if (newStatus === 'AVAILABLE') {
-      if (gift.status === 'GIFTED')               updates.timesGifted  = Math.max(0, gift.timesGifted - 1);
-      else if (gift.status === 'PENDING_CONFIRMATION') updates.timesPending = Math.max(0, gift.timesPending - 1);
-    }
+  const patchCounters = async (id: string, updates: Partial<Gift>) => {
     try {
       const res = await fetch(`/api/gifts/${id}`, {
         method: 'PATCH',
@@ -147,8 +137,34 @@ export default function AdminClient({
       if (res.ok) {
         const updated = await res.json();
         setGifts(gifts.map(g => g.id === id ? updated : g));
+      } else {
+        alert('Error al actualizar estado');
       }
     } catch { alert('Error al actualizar estado'); }
+  };
+
+  /** Confirma una unidad pendiente: pasa de "por confirmar" a "regalada". */
+  const approveGift = async (id: string) => {
+    const gift = gifts.find(g => g.id === id);
+    if (!gift || gift.timesPending <= 0) return;
+    if (!confirm('¿Confirmar que recibiste esta transferencia?')) return;
+    await patchCounters(id, {
+      timesGifted:  gift.timesGifted + 1,
+      timesPending: gift.timesPending - 1,
+    });
+  };
+
+  /** Libera una unidad: primero descuenta las pendientes, luego las ya regaladas. */
+  const releaseGift = async (id: string) => {
+    const gift = gifts.find(g => g.id === id);
+    if (!gift) return;
+    if (gift.timesPending > 0) {
+      if (!confirm('¿Rechazar esta reserva y liberar la unidad?')) return;
+      await patchCounters(id, { timesPending: gift.timesPending - 1 });
+    } else if (gift.timesGifted > 0) {
+      if (!confirm('¿Deshacer un regalo confirmado y liberar la unidad?')) return;
+      await patchCounters(id, { timesGifted: gift.timesGifted - 1 });
+    }
   };
 
   const deleteGift = async (id: string) => {
@@ -420,9 +436,10 @@ export default function AdminClient({
                         </span>
                       </td>
                       <td>
-                        <span className={`${styles.statusBadge} ${styles[`status-${gift.status}`]}`}>
+                        <span className={`${styles.statusBadge} ${styles[`status-${deriveStatusField(gift)}`]}`}>
                           <span className={styles.statusDot} />
-                          {translateStatus(gift.status)}
+                          {translateStatus(deriveStatusField(gift))}
+                          {gift.timesPending > 0 && ` (${gift.timesPending})`}
                         </span>
                       </td>
                       <td>
@@ -439,14 +456,14 @@ export default function AdminClient({
                           <button className={styles.actionBtn} onClick={() => { setEditingGift({ ...gift }); setIsModalOpen(true); }}>
                             Editar
                           </button>
-                          {gift.status === 'PENDING_CONFIRMATION' && (
-                            <button className={styles.actionBtn} onClick={() => updateStatus(gift.id, 'GIFTED')}>
+                          {gift.timesPending > 0 && (
+                            <button className={styles.actionBtn} onClick={() => approveGift(gift.id)}>
                               Aprobar
                             </button>
                           )}
-                          {gift.status !== 'AVAILABLE' && (
-                            <button className={styles.actionBtn} onClick={() => updateStatus(gift.id, 'AVAILABLE')}>
-                              Liberar
+                          {(gift.timesPending > 0 || gift.timesGifted > 0) && (
+                            <button className={styles.actionBtn} onClick={() => releaseGift(gift.id)}>
+                              {gift.timesPending > 0 ? 'Rechazar' : 'Liberar'}
                             </button>
                           )}
                           <button className={`${styles.actionBtn} ${styles.actionBtnDanger}`} onClick={() => deleteGift(gift.id)}>

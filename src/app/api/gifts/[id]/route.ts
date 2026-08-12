@@ -1,8 +1,18 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { isAdmin } from '@/lib/adminAuth';
 import { deriveStatusField } from '@/lib/giftStatus';
 
+/**
+ * Sólo administradores: devuelve el regalo completo, incluido
+ * `transfer_reference`. La página pública del regalo no usa esta ruta, lee de
+ * Prisma en el servidor.
+ */
 export async function GET(request: Request, context: { params: Promise<{ id: string }> }) {
+  if (!(await isAdmin())) {
+    return NextResponse.json({ error: 'UNAUTHORIZED' }, { status: 401 });
+  }
+
   try {
     const params = await context.params;
     const gift = await prisma.gift.findUnique({
@@ -17,6 +27,10 @@ export async function GET(request: Request, context: { params: Promise<{ id: str
 }
 
 export async function PATCH(request: Request, context: { params: Promise<{ id: string }> }) {
+  if (!(await isAdmin())) {
+    return NextResponse.json({ error: 'UNAUTHORIZED' }, { status: 401 });
+  }
+
   try {
     const params = await context.params;
     const body = await request.json();
@@ -56,6 +70,10 @@ export async function PATCH(request: Request, context: { params: Promise<{ id: s
 }
 
 export async function DELETE(request: Request, context: { params: Promise<{ id: string }> }) {
+  if (!(await isAdmin())) {
+    return NextResponse.json({ error: 'UNAUTHORIZED' }, { status: 401 });
+  }
+
   try {
     const params = await context.params;
     await prisma.gift.delete({

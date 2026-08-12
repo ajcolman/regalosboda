@@ -1,7 +1,18 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { isAdmin } from '@/lib/adminAuth';
 
+/**
+ * Sólo administradores. No es que los datos sean secretos —el sitio público ya
+ * muestra los datos bancarios—, pero este GET crea la fila de configuración si
+ * no existe, y esa escritura no debería quedar al alcance de cualquiera. Las
+ * páginas públicas leen la configuración de Prisma en el servidor, no de acá.
+ */
 export async function GET() {
+  if (!(await isAdmin())) {
+    return NextResponse.json({ error: 'UNAUTHORIZED' }, { status: 401 });
+  }
+
   try {
     let settings = await prisma.settings.findFirst();
     
@@ -28,6 +39,10 @@ export async function GET() {
 }
 
 export async function PATCH(request: Request) {
+  if (!(await isAdmin())) {
+    return NextResponse.json({ error: 'UNAUTHORIZED' }, { status: 401 });
+  }
+
   try {
     const body = await request.json();
     let settings = await prisma.settings.findFirst();

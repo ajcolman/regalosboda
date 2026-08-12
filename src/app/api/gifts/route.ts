@@ -1,8 +1,18 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { isAdmin } from '@/lib/adminAuth';
 import { deriveStatusField } from '@/lib/giftStatus';
 
+/**
+ * Sólo administradores: la respuesta incluye `transfer_reference` —nombres de
+ * invitados y números de comprobante— y también los regalos ocultos. Las
+ * páginas públicas no pasan por acá, leen de Prisma en el servidor.
+ */
 export async function GET() {
+  if (!(await isAdmin())) {
+    return NextResponse.json({ error: 'UNAUTHORIZED' }, { status: 401 });
+  }
+
   try {
     const gifts = await prisma.gift.findMany({
       orderBy: { createdAt: 'desc' }
@@ -15,6 +25,10 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
+  if (!(await isAdmin())) {
+    return NextResponse.json({ error: 'UNAUTHORIZED' }, { status: 401 });
+  }
+
   try {
     const body = await request.json();
     const { title, description, image_url, price, stock, isVisible, timesGifted, timesPending } = body;

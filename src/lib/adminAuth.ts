@@ -1,4 +1,5 @@
 import { cookies } from 'next/headers';
+import { SESSION_COOKIE, verifySessionToken } from './session';
 
 /**
  * El proxy (`src/proxy.ts`) sólo cubre `/admin/:path*`, así que las rutas de
@@ -6,5 +7,5 @@ import { cookies } from 'next/headers';
  */
 export async function isAdmin() {
   const cookieStore = await cookies();
-  return cookieStore.get('admin_auth')?.value === 'authenticated';
+  return verifySessionToken(cookieStore.get(SESSION_COOKIE)?.value);
 }

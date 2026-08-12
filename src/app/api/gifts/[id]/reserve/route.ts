@@ -1,6 +1,21 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { notifyAdmins } from '@/lib/push';
+import { excedeLimite, ipDe } from '@/lib/rateLimit';
+
+/**
+ * Esta ruta es pública por diseño —los invitados no tienen cuenta—, así que sin
+ * ningún freno alguien podría reservar la lista entera en segundos y dejarla
+ * toda "no disponible" el día de la boda. El tope es holgado a propósito:
+ * ninguna familia real reserva quince regalos en una hora, y si el límite falla
+ * preferimos que se cuele un pedido de más antes que rechazar uno legítimo.
+ */
+const MAX_RESERVAS = 15;
+const VENTANA_MS = 60 * 60 * 1000;
+
+/** Topes de longitud, para que el texto acumulado no crezca sin control. */
+const MAX_NOMBRE = 120;
+const MAX_REFERENCIA = 100;
 
 const formatGuaranies = (price: number) =>
   new Intl.NumberFormat('es-PY', {
@@ -28,6 +43,23 @@ export async function POST(request: Request, context: { params: Promise<{ id: st
       return NextResponse.json(
         { error: 'MISSING_FIELDS', message: 'Falta el nombre o el número de comprobante.' },
         { status: 400 }
+      );
+    }
+
+    if (guestName.length > MAX_NOMBRE || reference.length > MAX_REFERENCIA) {
+      return NextResponse.json(
+        { error: 'FIELDS_TOO_LONG', message: 'El nombre o el comprobante son demasiado largos.' },
+        { status: 400 }
+      );
+    }
+
+    if (excedeLimite('reserve', ipDe(request), MAX_RESERVAS, VENTANA_MS)) {
+      return NextResponse.json(
+        {
+          error: 'RATE_LIMITED',
+          message: 'Recibimos varias confirmaciones desde tu conexión. Probá de nuevo en un rato.',
+        },
+        { status: 429 }
       );
     }
 

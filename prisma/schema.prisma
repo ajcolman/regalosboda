@@ -24,6 +24,31 @@ model Gift {
   transfer_reference String?
   createdAt          DateTime @default(now())
   updatedAt          DateTime @updatedAt
+
+  contributions Contribution[]
+}
+
+/// Un aporte individual de un invitado a un regalo.
+///
+/// Existe para poder corregir el monto de una persona sin tocar a las demás:
+/// los contadores del regalo (`timesGifted` / `timesPending`) siguen siendo la
+/// fuente de verdad de la disponibilidad, y esta tabla es el detalle de quién
+/// puso cuánto. Cada fila corresponde a una unidad reservada del regalo.
+model Contribution {
+  id        String   @id @default(cuid())
+  giftId    String
+  gift      Gift     @relation(fields: [giftId], references: [id], onDelete: Cascade)
+  guestName String
+  reference String
+  /// Monto realmente transferido. Arranca en el precio del regalo y el
+  /// administrador puede rectificarlo si la persona transfirió otra cosa.
+  amount    Float
+  status    String   @default("PENDING") // PENDING | CONFIRMED
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([giftId])
+  @@index([reference])
 }
 
 /// Suscripciones Web Push de los administradores. Una fila por dispositivo/navegador.

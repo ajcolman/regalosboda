@@ -1,11 +1,23 @@
 'use client';
 
-import { useState } from 'react';
+import { Fragment, useState } from 'react';
 import Papa from 'papaparse';
 import styles from './admin.module.css';
 import ImageDropzone from '@/components/ImageDropzone';
 import PushNotifications from '@/components/PushNotifications';
 import { deriveStatusField } from '@/lib/giftStatus';
+import { amountFor, translateContributionStatus } from '@/lib/contributions';
+
+interface Contribution {
+  id: string;
+  giftId: string;
+  guestName: string;
+  reference: string;
+  amount: number;
+  status: string;
+  // Date cuando viene del server component, string cuando vuelve de la API.
+  createdAt: Date | string;
+}
 
 interface Gift {
   id: string;
@@ -19,6 +31,7 @@ interface Gift {
   timesPending: number;
   isVisible: boolean;
   transfer_reference: string | null;
+  contributions: Contribution[];
 }
 
 interface Settings {
@@ -70,6 +83,9 @@ export default function AdminClient({
   const [editingGift, setEditingGift]   = useState<Partial<Gift> | null>(null);
   const [modalLoading, setModalLoading] = useState(false);
   const [newGalleryUrl, setNewGalleryUrl] = useState('');
+  const [expandedGiftId, setExpandedGiftId] = useState<string | null>(null);
+  const [amountDrafts, setAmountDrafts]     = useState<Record<string, string>>({});
+  const [savingContribId, setSavingContribId] = useState<string | null>(null);
 
   // ── Gallery array ──
   let galleryArray: string[] = [];
@@ -82,11 +98,21 @@ export default function AdminClient({
   } catch { /* ignore */ }
 
   // ── Stats ──
-  const totalValue    = gifts.reduce((s, g) => s + g.price * g.stock, 0);
-  const receivedValue = gifts.reduce((s, g) => s + g.price * g.timesGifted, 0);
-  const pendingValue  = gifts.reduce((s, g) => s + g.price * g.timesPending, 0);
-  const giftedCount   = gifts.filter(g => g.timesGifted >= g.stock).length;
-  const progressPct   = gifts.length > 0 ? Math.round((giftedCount / gifts.length) * 100) : 0;
+  // Los montos salen del detalle de aportes, así una rectificación se refleja
+  // en los totales. Los regalos sin detalle caen a la estimación histórica.
+  const totalValue = gifts.reduce((s, g) => s + g.price * g.stock, 0);
+  const { received: receivedValue, pending: pendingValue, estimatedGifts } = gifts.reduce(
+    (acc, g) => {
+      const { received, pending, estimated } = amountFor(g, g.contributions);
+      acc.received += received;
+      acc.pending  += pending;
+      if (estimated) acc.estimatedGifts += 1;
+      return acc;
+    },
+    { received: 0, pending: 0, estimatedGifts: 0 }
+  );
+  const giftedCount = gifts.filter(g => g.timesGifted >= g.stock).length;
+  const progressPct = gifts.length > 0 ? Math.round((giftedCount / gifts.length) * 100) : 0;
 
   // ── Handlers ──
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -137,7 +163,8 @@ export default function AdminClient({
       });
       if (res.ok) {
         const updated = await res.json();
-        setGifts(gifts.map(g => g.id === id ? updated : g));
+        // `/api/gifts/[id]` no devuelve el detalle de aportes: lo conservamos.
+        setGifts(gifts.map(g => g.id === id ? { ...g, ...updated } : g));
       } else {
         alert('Error al actualizar estado');
       }
@@ -166,6 +193,72 @@ export default function AdminClient({
       if (!confirm('¿Deshacer un regalo confirmado y liberar la unidad?')) return;
       await patchCounters(id, { timesGifted: gift.timesGifted - 1 });
     }
+  };
+
+  // ── Aportes ──
+
+  /** Reemplaza el regalo con lo que devolvió el servidor, conservando su detalle. */
+  const mergeGift = (giftId: string, gift: Gift, contributions: (prev: Contribution[]) => Contribution[]) => {
+    setGifts(gs => gs.map(g =>
+      g.id === giftId ? { ...g, ...gift, contributions: contributions(g.contributions) } : g
+    ));
+  };
+
+  const clearDraft = (id: string) => setAmountDrafts(drafts => {
+    const next = { ...drafts };
+    delete next[id];
+    return next;
+  });
+
+  const patchContribution = async (giftId: string, id: string, updates: Partial<Contribution>) => {
+    setSavingContribId(id);
+    try {
+      const res = await fetch(`/api/contributions/${id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updates),
+      });
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        alert(data.message || 'Error al actualizar el aporte');
+        return;
+      }
+      const { contribution, gift } = await res.json();
+      mergeGift(giftId, gift, prev => prev.map(c => c.id === id ? contribution : c));
+      clearDraft(id);
+    } catch { alert('Error de conexión'); }
+    finally { setSavingContribId(null); }
+  };
+
+  /** Guarda el monto rectificado de un aporte. */
+  const saveAmount = (giftId: string, contribution: Contribution) => {
+    const draft = amountDrafts[contribution.id];
+    if (draft === undefined) return;
+    const amount = Number(draft);
+    if (!Number.isFinite(amount) || amount < 0) {
+      alert('El monto debe ser un número mayor o igual a cero.');
+      return;
+    }
+    if (amount === contribution.amount) {
+      clearDraft(contribution.id);
+      return;
+    }
+    patchContribution(giftId, contribution.id, { amount });
+  };
+
+  const deleteContribution = async (giftId: string, id: string) => {
+    if (!confirm('¿Eliminar este aporte? Se liberará la unidad que ocupaba.')) return;
+    setSavingContribId(id);
+    try {
+      const res = await fetch(`/api/contributions/${id}`, { method: 'DELETE' });
+      if (!res.ok) {
+        alert('Error al eliminar el aporte');
+        return;
+      }
+      const { gift } = await res.json();
+      mergeGift(giftId, gift, prev => prev.filter(c => c.id !== id));
+    } catch { alert('Error de conexión'); }
+    finally { setSavingContribId(null); }
   };
 
   const deleteGift = async (id: string) => {
@@ -211,7 +304,7 @@ export default function AdminClient({
       if (res.ok) {
         const saved = await res.json();
         if (isEditing) setGifts(gifts.map(g => g.id === saved.id ? { ...g, ...saved } : g));
-        else           setGifts([saved, ...gifts]);
+        else           setGifts([{ ...saved, contributions: [] }, ...gifts]);
         setIsModalOpen(false);
       } else {
         alert('Error al guardar el regalo');
@@ -296,7 +389,17 @@ export default function AdminClient({
             </div>
             <div className={styles.statInfo}>
               <div className={styles.statValue}>{formatPrice(receivedValue)}</div>
-              <div className={styles.statLabel}>Total Recibido</div>
+              <div className={styles.statLabel}>
+                Total Recibido
+                {estimatedGifts > 0 && (
+                  <span
+                    className={styles.statLabelHint}
+                    title={`${estimatedGifts} regalo(s) sin detalle de aportes completo: su monto se estima sobre el precio.`}
+                  >
+                    {' '}· {estimatedGifts} estimado{estimatedGifts > 1 ? 's' : ''}
+                  </span>
+                )}
+              </div>
               <div className={styles.statProgress}>
                 <div className={styles.statProgressFill} style={{ width: `${progressPct}%` }} />
               </div>
@@ -411,8 +514,15 @@ export default function AdminClient({
                   </tr>
                 </thead>
                 <tbody>
-                  {gifts.map(gift => (
-                    <tr key={gift.id}>
+                  {gifts.map(gift => {
+                    const isExpanded = expandedGiftId === gift.id;
+                    const money      = amountFor(gift, gift.contributions);
+                    // Los regalos cargados antes de que existiera el detalle de
+                    // aportes se siguen administrando con los contadores.
+                    const isLegacy   = gift.contributions.length === 0;
+                    return (
+                    <Fragment key={gift.id}>
+                    <tr>
                       <td>
                         <div className={styles.giftCell}>
                           {gift.image_url ? (
@@ -457,12 +567,18 @@ export default function AdminClient({
                           <button className={styles.actionBtn} onClick={() => { setEditingGift({ ...gift }); setIsModalOpen(true); }}>
                             Editar
                           </button>
-                          {gift.timesPending > 0 && (
+                          <button
+                            className={`${styles.actionBtn} ${isExpanded ? styles.actionBtnActive : ''}`}
+                            onClick={() => setExpandedGiftId(isExpanded ? null : gift.id)}
+                          >
+                            {isExpanded ? '▾' : '▸'} Aportes ({gift.contributions.length})
+                          </button>
+                          {isLegacy && gift.timesPending > 0 && (
                             <button className={styles.actionBtn} onClick={() => approveGift(gift.id)}>
                               Aprobar
                             </button>
                           )}
-                          {(gift.timesPending > 0 || gift.timesGifted > 0) && (
+                          {isLegacy && (gift.timesPending > 0 || gift.timesGifted > 0) && (
                             <button className={styles.actionBtn} onClick={() => releaseGift(gift.id)}>
                               {gift.timesPending > 0 ? 'Rechazar' : 'Liberar'}
                             </button>
@@ -473,7 +589,145 @@ export default function AdminClient({
                         </div>
                       </td>
                     </tr>
-                  ))}
+
+                    {isExpanded && (
+                      <tr className={styles.contribRow}>
+                        <td colSpan={8}>
+                          <div className={styles.contribPanel}>
+                            <div className={styles.contribPanelHeader}>
+                              <h4 className={styles.contribPanelTitle}>Aportes de “{gift.title}”</h4>
+                              <div className={styles.contribTotals}>
+                                <span>
+                                  Recibido: <strong>{formatPrice(money.received)}</strong>
+                                </span>
+                                {money.pending > 0 && (
+                                  <span>
+                                    Por confirmar: <strong>{formatPrice(money.pending)}</strong>
+                                  </span>
+                                )}
+                                <span className={styles.contribTotalsGoal}>
+                                  Valor del regalo: {formatPrice(gift.price * gift.stock)}
+                                </span>
+                              </div>
+                            </div>
+
+                            {money.estimated && (
+                              <p className={styles.contribWarn}>
+                                ⚠ Los contadores de este regalo ({gift.timesGifted} confirmados,{' '}
+                                {gift.timesPending} pendientes) no coinciden con su detalle de aportes.
+                                Los montos mostrados son estimados sobre el precio.
+                              </p>
+                            )}
+
+                            {gift.contributions.length === 0 ? (
+                              <p className={styles.contribEmpty}>
+                                Este regalo todavía no tiene aportes registrados en detalle.
+                                {gift.transfer_reference && (
+                                  <>
+                                    {' '}Referencias cargadas antes:{' '}
+                                    <span className={styles.refCode}>{gift.transfer_reference}</span>
+                                  </>
+                                )}
+                              </p>
+                            ) : (
+                              <table className={styles.contribTable}>
+                                <thead>
+                                  <tr>
+                                    <th>Invitado</th>
+                                    <th>Comprobante</th>
+                                    <th>Monto transferido</th>
+                                    <th>Estado</th>
+                                    <th>Acciones</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  {gift.contributions.map(c => {
+                                    const draft   = amountDrafts[c.id];
+                                    const isDirty = draft !== undefined && Number(draft) !== c.amount;
+                                    const isBusy  = savingContribId === c.id;
+                                    const differs = c.amount !== gift.price;
+                                    return (
+                                      <tr key={c.id}>
+                                        <td>{c.guestName}</td>
+                                        <td><span className={styles.refCode}>{c.reference}</span></td>
+                                        <td>
+                                          <div className={styles.amountCell}>
+                                            <input
+                                              type="number"
+                                              min="0"
+                                              step="1000"
+                                              className={styles.amountInput}
+                                              value={draft ?? String(c.amount)}
+                                              disabled={isBusy}
+                                              onChange={e =>
+                                                setAmountDrafts({ ...amountDrafts, [c.id]: e.target.value })
+                                              }
+                                              onKeyDown={e => {
+                                                if (e.key === 'Enter') {
+                                                  e.preventDefault();
+                                                  saveAmount(gift.id, c);
+                                                }
+                                              }}
+                                            />
+                                            {isDirty ? (
+                                              <button
+                                                className={styles.actionBtn}
+                                                disabled={isBusy}
+                                                onClick={() => saveAmount(gift.id, c)}
+                                              >
+                                                {isBusy ? '…' : 'Guardar'}
+                                              </button>
+                                            ) : (
+                                              differs && (
+                                                <span
+                                                  className={styles.amountDiff}
+                                                  title={`El precio del regalo es ${formatPrice(gift.price)}`}
+                                                >
+                                                  {c.amount > gift.price ? '▲' : '▼'} rectificado
+                                                </span>
+                                              )
+                                            )}
+                                          </div>
+                                        </td>
+                                        <td>
+                                          <span className={`${styles.statusBadge} ${styles[`status-${c.status === 'CONFIRMED' ? 'GIFTED' : 'PENDING_CONFIRMATION'}`]}`}>
+                                            <span className={styles.statusDot} />
+                                            {translateContributionStatus(c.status)}
+                                          </span>
+                                        </td>
+                                        <td>
+                                          <div className={styles.actionsCell}>
+                                            <button
+                                              className={styles.actionBtn}
+                                              disabled={isBusy}
+                                              onClick={() => patchContribution(gift.id, c.id, {
+                                                status: c.status === 'CONFIRMED' ? 'PENDING' : 'CONFIRMED',
+                                              })}
+                                            >
+                                              {c.status === 'CONFIRMED' ? 'Marcar pendiente' : 'Confirmar'}
+                                            </button>
+                                            <button
+                                              className={`${styles.actionBtn} ${styles.actionBtnDanger}`}
+                                              disabled={isBusy}
+                                              onClick={() => deleteContribution(gift.id, c.id)}
+                                            >
+                                              Eliminar
+                                            </button>
+                                          </div>
+                                        </td>
+                                      </tr>
+                                    );
+                                  })}
+                                </tbody>
+                              </table>
+                            )}
+                          </div>
+                        </td>
+                      </tr>
+                    )}
+                    </Fragment>
+                    );
+                  })}
                   {gifts.length === 0 && (
                     <tr>
                       <td colSpan={8} className={styles.tableEmpty}>

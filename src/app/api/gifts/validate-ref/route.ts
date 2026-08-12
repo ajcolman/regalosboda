@@ -10,16 +10,20 @@ export async function GET(request: Request) {
   }
 
   try {
-    // Buscamos si existe algún regalo que contenga esta referencia en su campo transfer_reference
-    const existingGift = await prisma.gift.findFirst({
-      where: {
-        transfer_reference: {
-          contains: ref,
+    // El comprobante puede estar en el detalle de aportes (lo actual) o en el
+    // campo `transfer_reference` del regalo (histórico): revisamos los dos.
+    const [existingContribution, existingGift] = await Promise.all([
+      prisma.contribution.findFirst({ where: { reference: ref } }),
+      prisma.gift.findFirst({
+        where: {
+          transfer_reference: {
+            contains: ref,
+          },
         },
-      },
-    });
+      }),
+    ]);
 
-    return NextResponse.json({ exists: !!existingGift });
+    return NextResponse.json({ exists: !!existingContribution || !!existingGift });
   } catch (error) {
     return NextResponse.json({ error: 'Error validating reference' }, { status: 500 });
   }

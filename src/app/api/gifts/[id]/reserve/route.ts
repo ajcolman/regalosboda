@@ -33,21 +33,52 @@ export async function POST(request: Request, context: { params: Promise<{ id: st
 
     const entry = `[${guestName}] ${reference}`;
 
-    const affected = await prisma.$executeRaw`
-      UPDATE "Gift"
-      SET "timesPending" = "timesPending" + 1,
-          "transfer_reference" = CASE
-            WHEN "transfer_reference" IS NULL OR "transfer_reference" = '' THEN ${entry}
-            ELSE "transfer_reference" || ' | ' || ${entry}
-          END,
-          "status" = CASE
-            WHEN "timesGifted" + "timesPending" + 1 >= "stock" THEN 'PENDING_CONFIRMATION'
-            ELSE 'AVAILABLE'
-          END,
-          "updatedAt" = NOW()
-      WHERE "id" = ${params.id}
-        AND "timesGifted" + "timesPending" < "stock"
-    `;
+    // El monto del aporte arranca en el precio del regalo; si la persona
+    // transfirió otra cosa, el administrador lo rectifica desde el panel.
+    // Lo leemos antes de abrir la transacción para no alargarla.
+    const priced = await prisma.gift.findUnique({
+      where: { id: params.id },
+      select: { price: true },
+    });
+
+    if (!priced) {
+      return NextResponse.json({ error: 'NOT_FOUND' }, { status: 404 });
+    }
+
+    // El UPDATE condicional sigue siendo el que admite o rechaza la reserva; el
+    // aporte se registra dentro de la misma transacción para que nunca quede
+    // una unidad contabilizada sin su detalle de quién la puso.
+    const affected = await prisma.$transaction(async (tx) => {
+      const updated = await tx.$executeRaw`
+        UPDATE "Gift"
+        SET "timesPending" = "timesPending" + 1,
+            "transfer_reference" = CASE
+              WHEN "transfer_reference" IS NULL OR "transfer_reference" = '' THEN ${entry}
+              ELSE "transfer_reference" || ' | ' || ${entry}
+            END,
+            "status" = CASE
+              WHEN "timesGifted" + "timesPending" + 1 >= "stock" THEN 'PENDING_CONFIRMATION'
+              ELSE 'AVAILABLE'
+            END,
+            "updatedAt" = NOW()
+        WHERE "id" = ${params.id}
+          AND "timesGifted" + "timesPending" < "stock"
+      `;
+
+      if (updated === 0) return 0;
+
+      await tx.contribution.create({
+        data: {
+          giftId: params.id,
+          guestName,
+          reference,
+          amount: priced.price,
+          status: 'PENDING',
+        },
+      });
+
+      return updated;
+    });
 
     if (affected === 0) {
       const gift = await prisma.gift.findUnique({ where: { id: params.id } });

@@ -982,3 +982,160 @@
   font-size: 0.82rem;
   color: var(--text-muted);
 }
+
+/* ══════════════════════════════
+   Detalle de aportes por regalo
+   ══════════════════════════════ */
+
+.actionBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.actionBtnActive {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: #fff;
+}
+
+.contribRow > td {
+  padding: 0 !important;
+  background: var(--surface-2);
+}
+
+.contribRow:hover {
+  background: var(--surface-2);
+}
+
+.contribPanel {
+  padding: 1.15rem 1.25rem 1.35rem;
+  border-left: 3px solid var(--primary);
+}
+
+.contribPanelHeader {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.9rem;
+}
+
+.contribPanelTitle {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--foreground);
+}
+
+.contribTotals {
+  display: flex;
+  gap: 1.1rem;
+  flex-wrap: wrap;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.contribTotals strong {
+  color: var(--foreground);
+  font-weight: 700;
+}
+
+.contribTotalsGoal {
+  padding-left: 1.1rem;
+  border-left: 1px solid var(--border);
+}
+
+.contribWarn {
+  margin: 0 0 0.9rem;
+  padding: 0.6rem 0.85rem;
+  border-radius: var(--radius-sm);
+  background: var(--warning-light);
+  color: var(--warning);
+  font-size: 0.78rem;
+  line-height: 1.5;
+}
+
+.contribEmpty {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+.contribTable {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  background: var(--surface);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+.contribTable th {
+  padding: 0.6rem 0.9rem;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+  font-weight: 700;
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.contribTable td {
+  padding: 0.65rem 0.9rem;
+  border-bottom: 1px solid var(--border-light);
+  vertical-align: middle;
+  font-size: 0.85rem;
+}
+
+.contribTable tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.amountCell {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.amountInput {
+  width: 130px;
+  padding: 0.35rem 0.6rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.amountInput:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(var(--primary-rgb), 0.12);
+}
+
+.amountInput:disabled {
+  opacity: 0.6;
+}
+
+.amountDiff {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--warning);
+  white-space: nowrap;
+}
+
+.statLabelHint {
+  color: var(--warning);
+  font-weight: 600;
+  cursor: help;
+}

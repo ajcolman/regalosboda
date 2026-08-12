@@ -1,11 +1,98 @@
+/**
+ * Carga datos de ejemplo en una base VACÍA de desarrollo.
+ *
+ * ⚠ Este script es destructivo: borra todos los regalos y la configuración
+ * (y, por la clave foránea en cascada, todos los aportes de los invitados).
+ * Como `.env` apunta a la base de producción en Neon, correrlo sin querer
+ * vaciaría la lista de regalos real. Por eso hay dos cerrojos independientes,
+ * y cada uno exige un acto deliberado distinto para abrirse:
+ *
+ *   1. El host tiene que ser local. Cualquier otro —incluida cualquier base en
+ *      Neon— se rechaza salvo que lo nombres explícitamente en
+ *      SEED_ALLOW_REMOTE_HOST. No alcanza un `--force` genérico: hay que
+ *      escribir el host que se va a vaciar.
+ *   2. La base tiene que estar vacía. Si ya tiene datos, se aborta aunque el
+ *      host sea local, salvo que agregues --force.
+ *
+ * Para hacer una copia antes de cualquier cosa: node prisma/backup.mjs
+ */
+
 import { PrismaClient } from '@prisma/client';
+import { config } from 'dotenv';
+
+// Leemos el entorno igual que el resto de los scripts, para que el cerrojo mire
+// exactamente la misma URL a la que se va a conectar Prisma.
+config();
+config({ path: '.env.local', override: true });
 
 const prisma = new PrismaClient();
 
+const HOSTS_LOCALES = ['localhost', '127.0.0.1', '::1', 'host.docker.internal'];
+
+function abortar(motivo: string): never {
+  console.error(`\n  \x1b[31mSEED CANCELADO\x1b[0m\n\n  ${motivo}\n`);
+  process.exit(1);
+}
+
+function hostDe(url: string) {
+  try {
+    return new URL(url).hostname;
+  } catch {
+    return '';
+  }
+}
+
+/** Los dos cerrojos. Corre antes de borrar nada. */
+async function verificarDestino() {
+  const url  = process.env.DATABASE_URL ?? '';
+  const host = hostDe(url);
+
+  if (!host) {
+    abortar('No se pudo leer un host válido de DATABASE_URL.');
+  }
+
+  // Cerrojo 1: sólo bases locales, salvo permiso nominal.
+  if (!HOSTS_LOCALES.includes(host) && process.env.SEED_ALLOW_REMOTE_HOST !== host) {
+    abortar(
+      `El seed borra TODOS los regalos, los aportes y la configuración,\n` +
+      `  y "${host}" no es una base local.\n\n` +
+      `  Si realmente querés vaciar esa base, nombrala de forma explícita:\n` +
+      `      SEED_ALLOW_REMOTE_HOST=${host} <comando> -- --force`
+    );
+  }
+
+  // Cerrojo 2: la base tiene que estar vacía.
+  const [gifts, settings, contributions] = await Promise.all([
+    prisma.gift.count(),
+    prisma.settings.count(),
+    prisma.contribution.count(),
+  ]);
+  const total = gifts + settings + contributions;
+
+  if (total > 0 && !process.argv.includes('--force')) {
+    abortar(
+      `La base "${host}" ya tiene datos y el seed los borraría:\n` +
+      `      ${gifts} regalo(s), ${contributions} aporte(s), ${settings} configuración(es).\n\n` +
+      `  Hacé una copia primero:  node prisma/backup.mjs\n` +
+      `  Y si estás seguro, repetí el comando con --force.`
+    );
+  }
+
+  console.log(`\n  Destino: ${host}`);
+  console.log(`  Estado previo: ${gifts} regalo(s), ${contributions} aporte(s), ${settings} configuración(es).`);
+  if (total > 0) console.log(`  \x1b[33m--force activo: se van a borrar.\x1b[0m`);
+  console.log();
+}
+
 async function main() {
+  await verificarDestino();
+
   console.log('Seeding database...');
 
   // 1. Delete all existing data to start fresh (optional, but good for seeding)
+  // Los aportes caen solos por la cascada de Gift, pero los borramos explícito
+  // para que quede a la vista que el seed también se los lleva.
+  await prisma.contribution.deleteMany({});
   await prisma.gift.deleteMany({});
   await prisma.settings.deleteMany({});
 

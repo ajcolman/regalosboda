@@ -21,15 +21,20 @@ export async function PATCH(request: Request, context: { params: Promise<{ id: s
     const params = await context.params;
     const body = await request.json();
     
-    // Parse numeric fields if they exist
-    const updateData: any = { ...body };
+    // Sólo estos campos son editables. Lista blanca en vez de `{ ...body }`
+    // para que el cliente pueda mandar el regalo entero (con su detalle de
+    // aportes y sus timestamps) sin que Prisma lo rechace, y para que `status`
+    // —que siempre se deriva de los contadores— no se pueda pisar desde afuera.
+    const updateData: Record<string, unknown> = {};
+
+    for (const field of ['title', 'description', 'image_url', 'transfer_reference'] as const) {
+      if (body[field] !== undefined) updateData[field] = body[field];
+    }
+    if (body.isVisible !== undefined) updateData.isVisible = Boolean(body.isVisible);
     if (body.price !== undefined) updateData.price = parseFloat(body.price);
     if (body.stock !== undefined) updateData.stock = parseInt(body.stock);
     if (body.timesGifted !== undefined) updateData.timesGifted = parseInt(body.timesGifted);
     if (body.timesPending !== undefined) updateData.timesPending = parseInt(body.timesPending);
-
-    // `status` es legacy y siempre se deriva de los contadores: ignoramos lo que mande el cliente.
-    delete updateData.status;
 
     let gift = await prisma.gift.update({
       where: { id: params.id },
